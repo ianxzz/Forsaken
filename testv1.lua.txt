@@ -1,0 +1,3844 @@
+local vu1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+local vu2 = {
+    runAutoGen = false,
+    autoBlockActive = false,
+    antiStunActive = false,
+    antiSlowActive = false,
+    killerAuraActive = false,
+    slashAuraActive = false,
+    autoFriedChicken = false,
+    infiniteStamina = false,
+    noclip = false,
+    infiniteJump = false,
+    killAllActive = false,
+    killAllFly = false,
+    killAllTeleport = false,
+    autoRagingPace = false,
+    autoUnstableEye = false,
+    autoPizzaDelivery = false,
+    auto404Error = false,
+    autoClone = false,
+    autoCoinFlip = false,
+    autoRepairActive = false,
+    promptActivated = false,
+    teleportedToGenerator = false,
+    flying = false,
+    autoGetItemsActive = false,
+    autoGetItemsActive = false,
+    autoGetMedkitActive = false,
+    autoGetBloxyColaActive = false,
+    itemAuraActive = false
+}
+local vu3 = {
+    lastAuraUse = 0,
+    lastFriedChickenTime = 0,
+    lastCloneTime = 0,
+    lastCoinFlipTime = 0,
+    lastEspUpdate = 0,
+    teleportTime = 0
+}
+local vu4 = {
+    autoGenDelay = 2.5,
+    auraRange = 15,
+    auraCooldown = 1,
+    friedChickenThreshold = 50,
+    friedChickenCooldown = 5,
+    cloneCooldown = 10,
+    coinFlipCooldown = 5,
+    repairCheckInterval = 1,
+    teleportCooldown = 0.5,
+    killAllSpeed = 50,
+    flySpeed = 50,
+    espUpdateInterval = espUpdateInterval or 0.3,
+    itemAuraRange = 5,
+    itemPickupCooldown = 1,
+    highlightTransparency = 0.5,
+    OutlineTransparency = 0,
+    espTextSize = 14
+}
+local vu5 = data or {
+    autoGenDebounce = {},
+    repairDebounce = {},
+    skillCooldowns = {},
+    lastHealth = 0,
+    currentTarget = nil,
+    currentRepairGenerator = nil,
+    killerModel = nil,
+    isSurvivor = false
+}
+local vu6 = {
+    autoBlockConnection = nil,
+    antiStunConnection = nil,
+    antiSlowConnection = nil,
+    auraConnection = nil,
+    friedChickenConnection = nil,
+    staminaConnection = nil,
+    killAllConnection = nil,
+    cloneConnection = nil,
+    coinFlipConnection = nil,
+    autoRepairConnection = nil,
+    flightConn = nil,
+    bodyGyro = nil,
+    bodyVel = nil,
+    skillConnections = {},
+    auraConnection = nil,
+    autoGetItemsConnection = nil,
+    autoGetMedkitConnection = nil,
+    autoGetBloxyColaConnection = nil,
+    itemAuraConnection = nil
+}
+local vu7 = {}
+local vu8 = espSettings or {
+    SurvivorsHighlight = false,
+    KillerHighlight = false,
+    ItemsHighlight = false,
+    GeneratorsHighlight = false,
+    SurvivorsNameESP = false,
+    KillerNameESP = false,
+    ItemsNameESP = false,
+    GeneratorsNameESP = false,
+    SurvivorsDistance = false,
+    KillerDistance = false,
+    ItemsDistance = false,
+    GeneratorsDistance = false
+}
+local _ = {
+    Survivor = Color3.fromRGB(0, 255, 0),
+    Killer = Color3.fromRGB(255, 0, 0),
+    Items = Color3.fromRGB(128, 0, 128),
+    Generator = Color3.fromRGB(0, 191, 255)
+}
+local vu9 = {
+    survivors = {},
+    killers = {},
+    items = {},
+    generators = {}
+}
+local vu10 = {
+    survivors = {},
+    killers = {},
+    items = {},
+    generators = {}
+}
+local vu11 = {
+    Chance = false,
+    Taph = false,
+    Dusekkar = false,
+    Guest1337 = false,
+    TwoTime = false,
+    Elliot = false,
+    Shedletsky = false,
+    Noli = false,
+    OneXOne = false,
+    C001kidd = false,
+    JohnDoe = false,
+    Slasher = false
+}
+local vu12 = {
+    Chance = {
+        abilities = {
+            "Shoot"
+        },
+        targetKiller = true
+    },
+    Taph = {
+        abilities = {
+            "SubspaceTripmine"
+        },
+        targetKiller = true
+    },
+    Dusekkar = {
+        abilities = {
+            "PlasmaBeam",
+            "SpawnProtection"
+        },
+        targetKiller = {
+            PlasmaBeam = true,
+            SpawnProtection = false
+        }
+    },
+    Guest1337 = {
+        abilities = {
+            "Block",
+            "Charge",
+            "Punch"
+        },
+        targetKiller = true
+    },
+    TwoTime = {
+        abilities = {
+            "Dagger",
+            "Ritual"
+        },
+        targetKiller = true
+    },
+    Elliot = {
+        abilities = {
+            "ThrowPizza"
+        },
+        targetKiller = false
+    },
+    Shedletsky = {
+        abilities = {
+            "Slash"
+        },
+        targetKiller = true
+    },
+    Noli = {
+        abilities = {
+            "Stab",
+            "VoidRush",
+            "Nova"
+        },
+        targetKiller = false
+    },
+    OneXOne = {
+        abilities = {
+            "Slash",
+            "Entanglement",
+            "MassInfection"
+        },
+        targetKiller = false
+    },
+    C001kidd = {
+        abilities = {
+            "Punch",
+            "CorruptNature",
+            "WalkspeedOverride"
+        },
+        targetKiller = false
+    },
+    JohnDoe = {
+        abilities = {
+            "Slash",
+            "CorruptEnergy",
+            "DigitalFootprint"
+        },
+        targetKiller = false
+    },
+    Slasher = {
+        abilities = {
+            "Slash",
+            "Behead",
+            "GashingWound"
+        },
+        targetKiller = false
+    }
+}
+local vu13 = {
+    Primary = Color3.fromHex("#3498db"),
+    Secondary = Color3.fromHex("#2c3e50"),
+    Accent = Color3.fromHex("#1abc9c"),
+    Dark = Color3.fromHex("#1a1a1a"),
+    Text = Color3.fromHex("#ecf0f1"),
+    Danger = Color3.fromHex("#e74c3c"),
+    LightGray = Color3.fromHex("#bdc3c7"),
+    DarkGray = Color3.fromHex("#7f8c8d"),
+    White = Color3.fromHex("#ffffff")
+}
+local vu14 = {
+    Survivor = Color3.fromRGB(0, 255, 0),
+    Killer = Color3.fromRGB(255, 0, 0),
+    Medkit = Color3.fromRGB(0, 255, 0),
+    BloxyCola = Color3.fromRGB(88, 57, 39),
+    Generator = Color3.fromRGB(0, 191, 255)
+}
+vu1.TransparencyValue = 0.15
+vu1:AddTheme({
+    Name = "LduxTheme",
+    Accent = "#18181b",
+    Dialog = "#18181b",
+    Outline = "#FFFFFF",
+    Text = "#FFFFFF",
+    Placeholder = "#000000",
+    Background = "#0e0e10",
+    Button = "#52525b",
+    Icon = "#00f7ff"
+})
+vu1:SetTheme("LduxTheme")
+local function vu24(p15, p16, p17)
+    local v18 = ""
+    for v19 = 1, # p15 do
+        local v20 = (v19 - 1) / (# p15 - 1)
+        local v21 = math.floor((p16.R + (p17.R - p16.R) * v20) * 255)
+        local v22 = math.floor((p16.G + (p17.G - p16.G) * v20) * 255)
+        local v23 = math.floor((p16.B + (p17.B - p16.B) * v20) * 255)
+        v18 = v18 .. string.format("<font color=\"rgb(%d,%d,%d)\">%s</font>", v21, v22, v23, p15:sub(v19, v19))
+    end
+    return v18
+end
+local v25 = vu1:CreateWindow({
+    Title = vu24("Ldux HUB", vu13.Primary, vu13.Text),
+    Icon = "infinity",
+    Author = vu24("Noktscript21", vu13.LightGray, vu13.Text),
+    Folder = "Ldux HUB",
+    Size = UDim2.fromOffset(400, 240),
+    Theme = "LduxTheme",
+    Background = vu1:Gradient({
+        ["0"] = {
+            Color = vu13.Dark,
+            Transparency = 0
+        },
+        ["50"] = {
+            Color = vu13.Secondary,
+            Transparency = 0
+        },
+        ["100"] = {
+            Color = Color3.fromHex("#000000"),
+            Transparency = 0
+        }
+    }, {
+        Rotation = 150
+    }),
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function()
+            vu1:Notify({
+                Title = "User Profile",
+                Content = "This is you!",
+                Duration = 3
+            })
+        end
+    },
+    SideBarWidth = 200,
+    ScrollBarEnabled = true,
+    CornerRadius = UDim.new(0, 14),
+    DropShadow = true
+})
+local v26 = v25:Section({
+    Title = vu24("MAIN", vu13.Primary, vu13.Text),
+    Opened = true
+})
+local v27 = v25:Section({
+    Title = vu24("GAME", vu13.Primary, vu13.Text),
+    Opened = true
+})
+local v28 = v25:Section({
+    Title = vu24("SETTINGS", vu13.Primary, vu13.Text),
+    Opened = true
+})
+local v29 = v26:Tab({
+    Title = "INFO",
+    Icon = "info"
+})
+local v30 = v26:Tab({
+    Title = "SOCIALS",
+    Icon = "users"
+})
+local v31 = v26:Tab({
+    Title = "CHARACTER",
+    Icon = "user"
+})
+local v32 = v27:Tab({
+    Title = "ESP",
+    Icon = "eye"
+})
+local v33 = v27:Tab({
+    Title = "AIMBOT",
+    Icon = "axe"
+})
+local v34 = v27:Tab({
+    Title = "SURVIVOR",
+    Icon = "plus"
+})
+local v35 = v27:Tab({
+    Title = "KILLER",
+    Icon = "sword"
+})
+local v36 = v28:Tab({
+    Title = "GAME SETTINGS",
+    Icon = "settings"
+})
+local v37 = v28:Tab({
+    Title = "SERVER",
+    Icon = "server"
+})
+local v38 = {}
+local function vu44()
+    local v39 = false
+    vu5.killerModel = nil
+    if workspace:FindFirstChild("Players") and workspace.Players:FindFirstChild("Killers") then
+        local v40, v41, v42 = pairs(workspace.Players.Killers:GetChildren())
+        while true do
+            local v43
+            v42, v43 = v40(v41, v42)
+            if v42 == nil then
+                break
+            end
+            if v43:GetAttribute("Username") ~= game.Players.LocalPlayer.Name then
+                if v43:GetAttribute("Username") and game.Players:FindFirstChild(v43:GetAttribute("Username")) then
+                    vu5.killerModel = v43
+                end
+            else
+                vu5.killerModel = v43
+                v39 = true
+            end
+        end
+        vu5.isSurvivor = not v39
+    end
+end
+local function vu48(p45)
+    local v46 = game.Players.LocalPlayer.PlayerGui
+    if v46:FindFirstChild("MainUI") and v46.MainUI:FindFirstChild("AbilityContainer") then
+        local v47 = v46.MainUI.AbilityContainer:FindFirstChild(p45)
+        if v47 and v47:FindFirstChild("CooldownTime") then
+            return v47.CooldownTime.Text == ""
+        end
+    end
+    return false
+end
+game:GetService("RunService").Heartbeat:Connect(function()
+    vu44()
+end)
+local vu49 = 0
+local vu50 = tick()
+local vu51 = 0
+game:GetService("RunService").RenderStepped:Connect(function()
+    vu49 = vu49 + 1
+end)
+local function vu54()
+    local v52 = tick()
+    local v53 = v52 - vu50
+    if v53 >= 1 then
+        vu51 = vu49 / v53
+        vu49 = 0
+        vu50 = v52
+    end
+    return math.floor(vu51)
+end
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+v29:Section({
+    Title = vu24("GAME INFO", vu13.Primary, vu13.Text)
+})
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+local vu55 = v29:Paragraph({
+    Title = vu24("FPS: --", vu13.Primary, vu13.Text),
+    Desc = "Loading...",
+    Image = "activity",
+    ImageSize = 20,
+    Color = "White"
+})
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+local vu56 = v29:Paragraph({
+    Title = vu24("PING: --", vu13.Primary, vu13.Text),
+    Desc = "Loading...",
+    Image = "signal",
+    ImageSize = 20,
+    Color = "White"
+})
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+local vu57 = v29:Paragraph({
+    Title = vu24("PLAYERS: --", vu13.Primary, vu13.Text),
+    Desc = "Loading...",
+    Image = "users",
+    ImageSize = 20,
+    Color = "White"
+})
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+local vu58 = v29:Paragraph({
+    Title = vu24("GAME: --", vu13.Primary, vu13.Text),
+    Desc = "Loading...",
+    Image = "gamepad",
+    ImageSize = 20,
+    Color = "White"
+})
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+local function vu63()
+    local v59 = vu54() or 0
+    local v60 = math.random(30, 120)
+    local v61 = # game:GetService("Players"):GetPlayers()
+    local v62 = game:GetService("Players").MaxPlayers
+    vu55:SetTitle(vu24("FPS: " .. v59, vu13.Primary, 60 < v59 and vu13.Accent or vu13.Danger))
+    vu55:SetDesc(60 < v59 and "Excellent performance" or "Low performance")
+    vu56:SetTitle(vu24("PING: " .. v60 .. "ms", vu13.Primary, v60 < 80 and vu13.Accent or vu13.Danger))
+    vu56:SetDesc(v60 < 80 and "Good connection" or "High latency")
+    vu57:SetTitle(vu24("PLAYERS: " .. v61 .. "/" .. v62, vu13.Primary, vu13.Text))
+    vu57:SetDesc("Currently in server")
+    vu58:SetTitle(vu24(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name, vu13.Primary, vu13.Text))
+    vu58:SetDesc("Current game")
+end
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+vu63()
+spawn(function()
+    while wait(1) do
+        vu63()
+    end
+end)
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+v29:Section({
+    Title = vu24("CHANGELOGS", vu13.Primary, vu13.Text)
+})
+v29:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+v29:Code({
+    Title = "Version: 1.1.0",
+    Code = " Changelogs:\n+ Fixed auto repair Generators\n+ Fixed Kill All\n+ Removed Autofarm Tab\n+ New design\n+ New survivor tab functions: auto flip coin, auto fried chicken, auto block, auto clone, auto get items\n+ New killer tab functions: killer aura, auto skills\n+ Fully fixed aimbot functions\n+ Optimized ESP functions\n+ New anti stun, anti slow, infinite stamina functions\n+ Configurations\n+ Rewrited all code"
+})
+v30:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+v30:Paragraph({
+    Title = vu24("Discord", vu13.Primary, vu13.Text),
+    Desc = "Please join to my Server ",
+    Image = "video",
+    ImageSize = 20,
+    Color = "White"
+})
+v30:Button({
+    Title = vu24("Discord", vu13.Primary, vu13.Accent),
+    Desc = "Copy dc link",
+    Icon = "copy",
+    Callback = function()
+        setclipboard("https://discord.gg/62CN58uBN3")
+        vu1:Notify({
+            Title = "Link Copied",
+            Content = "Discord link copied to clipboard",
+            Duration = 2
+        })
+    end
+})
+v30:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v30:Paragraph({
+    Title = vu24("YouTube", vu13.Primary, vu13.Text),
+    Desc = "Check out my YouTube channel",
+    Image = "youtube",
+    ImageSize = 20,
+    Color = "White"
+})
+v30:Button({
+    Title = vu24("YouTube", vu13.Primary, vu13.Accent),
+    Desc = "Copy link to my YouTube",
+    Icon = "copy",
+    Callback = function()
+        setclipboard("https://youtube.com/@noktscript21?si=abqTnnB5GIdakhyC")
+        vu1:Notify({
+            Title = "Link Copied",
+            Content = "YouTube link copied to clipboard",
+            Duration = 2
+        })
+    end
+})
+v30:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v30:Paragraph({
+    Title = vu24("Discord Pablo", vu13.Primary, vu13.Text),
+    Desc = "Join discord server",
+    Image = "send",
+    ImageSize = 20,
+    Color = "White"
+})
+v30:Button({
+    Title = vu24("Discord", vu13.Primary, vu13.Accent),
+    Desc = "Copy link to join",
+    Icon = "copy",
+    Callback = function()
+        setclipboard("https://discord.gg/UwXATBpZpz")
+        vu1:Notify({
+            Title = "Link Copied",
+            Content = "Discord link copied to clipboard",
+            Duration = 2
+        })
+    end
+})
+local vu64 = game:GetService("Players")
+local vu65 = game:GetService("RunService")
+local vu66 = game:GetService("ContextActionService")
+local vu67 = 0
+local vu68 = 0
+local function vu69()
+    vu66:UnbindAction("Ldux_Flight_Up")
+    vu66:UnbindAction("Ldux_Flight_Down")
+    vu68 = 0
+    vu67 = 0
+end
+local function vu83()
+    if vu2.flying then
+        return
+    else
+        vu2.flying = true
+        local v70 = vu64.LocalPlayer
+        local v71 = v70.Character or v70.CharacterAdded:Wait()
+        local vu72 = v71:WaitForChild("HumanoidRootPart")
+        local vu73 = v71:FindFirstChildOfClass("Humanoid")
+        if vu73 then
+            vu73.AutoRotate = false
+            vu6.bodyGyro = Instance.new("BodyGyro")
+            vu6.bodyGyro.P = 90000
+            vu6.bodyGyro.MaxTorque = Vector3.new(9000000000, 9000000000, 9000000000)
+            vu6.bodyGyro.CFrame = vu72.CFrame
+            vu6.bodyGyro.Parent = vu72
+            vu6.bodyVel = Instance.new("BodyVelocity")
+            vu6.bodyVel.MaxForce = Vector3.new(9000000000, 9000000000, 9000000000)
+            vu6.bodyVel.Velocity = Vector3.zero
+            vu6.bodyVel.Parent = vu72
+            vu6.flightConn = vu65.Heartbeat:Connect(function()
+                local v74 = workspace.CurrentCamera
+                local v75 = v74.CFrame.LookVector
+                local v76 = v74.CFrame.RightVector
+                local v77 = vu73.MoveDirection
+                local v78 = v77:Dot(Vector3.new(v75.X, 0, v75.Z).Unit)
+                local v79 = v77:Dot(Vector3.new(v76.X, 0, v76.Z).Unit)
+                local v80 = v77.Magnitude <= 0 and 0 or v75.Y * v78
+                local v81 = v75 * v78 + v76 * v79
+                local v82 = Vector3.new(v81.X, v80, v81.Z)
+                if v82.Magnitude > 1 then
+                    v82 = v82.Unit
+                end
+                vu6.bodyVel.Velocity = v82 * vu4.flySpeed
+                vu6.bodyGyro.CFrame = CFrame.lookAt(vu72.Position, vu72.Position + v75, v74.CFrame.UpVector)
+            end)
+        end
+    end
+end
+local function vu85()
+    if vu2.flying then
+        vu2.flying = false
+        vu69()
+        if vu6.flightConn then
+            vu6.flightConn:Disconnect()
+            vu6.flightConn = nil
+        end
+        if vu6.bodyGyro then
+            vu6.bodyGyro:Destroy()
+            vu6.bodyGyro = nil
+        end
+        if vu6.bodyVel then
+            vu6.bodyVel:Destroy()
+            vu6.bodyVel = nil
+        end
+        local v84 = vu64.LocalPlayer.Character
+        if v84 then
+            v84 = v84:FindFirstChildOfClass("Humanoid")
+        end
+        if v84 then
+            v84.AutoRotate = true
+        end
+    end
+end
+local function vu88(p86)
+    vu2.infiniteStamina = p86
+    local vu87 = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+    if vu2.infiniteStamina then
+        if vu6.staminaConnection then
+            vu6.staminaConnection:Disconnect()
+        end
+        vu6.staminaConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.infiniteStamina then
+                function vu87.StaminaLossDisabled()
+                    return true
+                end
+            else
+                vu6.staminaConnection:Disconnect()
+                vu87.StaminaLossDisabled = nil
+            end
+        end)
+    else
+        if vu6.staminaConnection then
+            vu6.staminaConnection:Disconnect()
+            vu6.staminaConnection = nil
+        end
+        vu87.StaminaLossDisabled = nil
+    end
+end
+local function vu91()
+    if not vu6.antiStunConnection then
+        vu6.antiStunConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.antiStunActive then
+                local v89 = game.Players.LocalPlayer.Character
+                if v89 and v89:FindFirstChild("SpeedMultipliers") then
+                    local v90 = v89.SpeedMultipliers:FindFirstChild("Stunned")
+                    if v90 and v90.Value < 1 then
+                        v90.Value = 1
+                    end
+                end
+            end
+        end)
+    end
+end
+local function vu92()
+    if vu6.antiStunConnection then
+        vu6.antiStunConnection:Disconnect()
+        vu6.antiStunConnection = nil
+    end
+end
+local function vu98()
+    if not vu6.antiSlowConnection then
+        vu6.antiSlowConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.antiSlowActive then
+                local v93 = game.Players.LocalPlayer.Character
+                if v93 and v93:FindFirstChild("SpeedMultipliers") then
+                    local v94, v95, v96 = pairs(v93.SpeedMultipliers:GetChildren())
+                    while true do
+                        local v97
+                        v96, v97 = v94(v95, v96)
+                        if v96 == nil then
+                            break
+                        end
+                        if v97.Value < 1 then
+                            v97.Value = 1
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end
+local function vu99()
+    if vu6.antiSlowConnection then
+        vu6.antiSlowConnection:Disconnect()
+        vu6.antiSlowConnection = nil
+    end
+end
+v31:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v31:Toggle({
+    Title = vu24("Noclip", vu13.Primary, vu13.Text),
+    Value = vu2.noclip,
+    Callback = function(p100)
+        vu2.noclip = p100
+        if p100 then
+            _G.NoclipLoop = game:GetService("RunService").Stepped:Connect(function()
+                local v101 = game:GetService("Players").LocalPlayer.Character
+                if v101 then
+                    local v102, v103, v104 = pairs(v101:GetDescendants())
+                    while true do
+                        local v105
+                        v104, v105 = v102(v103, v104)
+                        if v104 == nil then
+                            break
+                        end
+                        if v105:IsA("BasePart") then
+                            v105.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        elseif _G.NoclipLoop then
+            _G.NoclipLoop:Disconnect()
+        end
+    end
+})
+v31:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v31:Toggle({
+    Title = vu24("Infinite Jump", vu13.Primary, vu13.Text),
+    Value = vu2.infiniteJump,
+    Callback = function(p106)
+        vu2.infiniteJump = p106
+        if p106 then
+            _G.InfiniteJumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
+                local v107 = game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if v107 then
+                    v107:ChangeState("Jumping")
+                end
+            end)
+        elseif _G.InfiniteJumpConnection then
+            _G.InfiniteJumpConnection:Disconnect()
+        end
+    end
+})
+v31:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v31:Toggle({
+    Title = vu24("Fly", vu13.Primary, vu13.Text),
+    Desc = "Smooth camera-aligned flight (PC, Mobile, Gamepad)",
+    Value = vu2.flying,
+    Callback = function(p108)
+        if p108 then
+            vu83()
+        else
+            vu85()
+        end
+    end
+})
+v31:Slider({
+    Title = vu24("Fly Speed", vu13.Primary, vu13.Text),
+    Desc = "Adjust flight speed",
+    Value = {
+        Min = 5,
+        Max = 150,
+        Default = vu4.flySpeed
+    },
+    Callback = function(p109)
+        vu4.flySpeed = p109
+    end
+})
+v31:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v31:Toggle({
+    Title = vu24("Infinite Stamina", vu13.Primary, vu13.Text),
+    Desc = "Never get tired while sprinting",
+    Value = vu2.infiniteStamina,
+    Icon = "zap",
+    Callback = function(p110)
+        vu88(p110)
+    end
+})
+v31:Divider({
+    Title = vu24("ANTI FUNCTIONS", vu13.Primary, vu13.Text)
+})
+v31:Toggle({
+    Title = vu24("Anti Stun", vu13.Primary, vu13.Text),
+    Desc = "Never get stunned",
+    Value = vu2.antiStunActive,
+    Icon = "zap-off",
+    Callback = function(p111)
+        vu2.antiStunActive = p111
+        if p111 then
+            vu91()
+        else
+            vu92()
+        end
+    end
+})
+v31:Divider({
+    Title = vu24("ANTI FUNCTIONS", vu13.Primary, vu13.Text)
+})
+v31:Toggle({
+    Title = vu24("Anti Slow", vu13.Primary, vu13.Text),
+    Desc = "Never get slowed",
+    Value = vu2.antiSlowActive,
+    Icon = "gauge",
+    Callback = function(p112)
+        vu2.antiSlowActive = p112
+        if p112 then
+            vu98()
+        else
+            vu99()
+        end
+    end
+})
+v25:CreateTopbarButton("theme-switcher", "moon", function()
+    vu1:SetTheme(vu1:GetCurrentTheme() == "Dark" and "Light" or "Dark")
+    local v113 = vu1
+    local v114 = v113.Notify
+    local v115 = {
+        Title = "Theme Changed",
+        Content = "Current theme: " .. vu1:GetCurrentTheme(),
+        Duration = 2
+    }
+    v114(v113, v115)
+end, 990)
+local function vu124(p116, p117, p118, p119)
+    if not (p116 and p116:IsA("BasePart")) then
+        return nil
+    end
+    local v120 = p118 or Color3.fromRGB(255, 255, 255)
+    local v121 = p116:FindFirstChild("Ldux_Billboard")
+    if v121 then
+        v121:Destroy()
+    end
+    local v122 = Instance.new("BillboardGui")
+    v122.Name = "Ldux_Billboard"
+    v122.Adornee = p116
+    v122.Size = UDim2.new(0, 200, 0, 50)
+    v122.StudsOffset = p119 or Vector3.new(0, 3, 0)
+    v122.AlwaysOnTop = true
+    v122.MaxDistance = 1000
+    v122.Parent = p116
+    local v123 = Instance.new("TextLabel")
+    v123.Size = UDim2.new(1, 0, 1, 0)
+    v123.BackgroundTransparency = 1
+    v123.Text = p117
+    v123.TextColor3 = v120
+    v123.TextSize = vu4.espTextSize or 14
+    v123.Font = Enum.Font.GothamBold
+    v123.TextStrokeTransparency = 0
+    v123.TextStrokeColor3 = Color3.new(0, 0, 0)
+    v123.Parent = v122
+    return v122
+end
+local function vu130(p125, p126)
+    if not (p125 and p125:IsA("Model")) then
+        return nil
+    end
+    local v127 = p126 or Color3.fromRGB(255, 255, 255)
+    local v128 = p125:FindFirstChild("Ldux_Highlight")
+    if v128 then
+        v128:Destroy()
+    end
+    local v129 = Instance.new("Highlight")
+    v129.Name = "Ludx_Highlight"
+    v129.Adornee = p125
+    v129.FillColor = v127
+    v129.OutlineColor = v127
+    v129.FillTransparency = vu4.highlightTransparency or 0.5
+    v129.OutlineTransparency = vu4.highlightOutlineTransparency or 0
+    v129.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    v129.Parent = p125
+    return v129
+end
+local function vu134(p131)
+    local v132 = game.Players.LocalPlayer.Character
+    if not v132 then
+        return 0
+    end
+    local v133 = v132:FindFirstChild("HumanoidRootPart")
+    return not v133 and 0 or math.floor((p131 - v133.Position).Magnitude)
+end
+local function vu144(p135)
+    if vu9[p135] then
+        local v136, v137, v138 = pairs(vu9[p135])
+        while true do
+            local vu139
+            v138, vu139 = v136(v137, v138)
+            if v138 == nil then
+                break
+            end
+            if vu139 and vu139.Parent then
+                pcall(function()
+                    vu139:Destroy()
+                end)
+            end
+        end
+        vu9[p135] = {}
+    end
+    if vu10[p135] then
+        local v140, v141, v142 = pairs(vu10[p135])
+        while true do
+            local vu143
+            v142, vu143 = v140(v141, v142)
+            if v142 == nil then
+                break
+            end
+            if vu143 then
+                pcall(function()
+                    vu143:Disconnect()
+                end)
+            end
+        end
+        vu10[p135] = {}
+    end
+end
+local function vu157()
+    vu144("survivors")
+    if vu8.SurvivorsHighlight or (vu8.SurvivorsNameESP or vu8.SurvivorsDistance) then
+        local v145 = workspace:FindFirstChild("Players")
+        if v145 then
+            local v146 = v145:FindFirstChild("Survivors")
+            if v146 then
+                local v147, v148, v149 = pairs(v146:GetChildren())
+                while true do
+                    local v150
+                    v149, v150 = v147(v148, v149)
+                    if v149 == nil then
+                        break
+                    end
+                    if v150:IsA("Model") then
+                        local vu151 = v150:GetAttribute("Username") or v150.Name
+                        local v152 = vu8.SurvivorsHighlight and vu130(v150, vu14.Survivor)
+                        if v152 then
+                            table.insert(vu9.survivors, v152)
+                        end
+                        if vu8.SurvivorsNameESP or vu8.SurvivorsDistance then
+                            local vu153 = v150:FindFirstChild("Head")
+                            if vu153 then
+                                local vu154 = vu124(vu153, vu8.SurvivorsNameESP and vu151 and vu151 or "", vu14.Survivor, Vector3.new(0, 4, 0))
+                                if vu154 then
+                                    table.insert(vu9.survivors, vu154)
+                                    if vu8.SurvivorsDistance then
+                                        local v156 = game:GetService("RunService").Heartbeat:Connect(function()
+                                            if vu154 and (vu154.Parent and (vu153 and vu153.Parent)) then
+                                                local v155 = vu134(vu153.Position)
+                                                vu154.TextLabel.Text = vu151 .. " [" .. v155 .. "m]"
+                                            end
+                                        end)
+                                        table.insert(vu10.survivors, v156)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            return
+        end
+    else
+        return
+    end
+end
+local function vu170()
+    vu144("killers")
+    if vu8.KillerHighlight or (vu8.KillerNameESP or vu8.KillerDistance) then
+        local v158 = workspace:FindFirstChild("Players")
+        if v158 then
+            local v159 = v158:FindFirstChild("Killers")
+            if v159 then
+                local v160, v161, v162 = pairs(v159:GetChildren())
+                while true do
+                    local v163
+                    v162, v163 = v160(v161, v162)
+                    if v162 == nil then
+                        break
+                    end
+                    if v163:IsA("Model") then
+                        local vu164 = v163:GetAttribute("Username") or v163.Name
+                        local v165 = vu8.KillerHighlight and vu130(v163, vu14.Killer)
+                        if v165 then
+                            table.insert(vu9.killers, v165)
+                        end
+                        if vu8.KillerNameESP or vu8.KillerDistance then
+                            local vu166 = v163:FindFirstChild("Head")
+                            if vu166 then
+                                local vu167 = vu124(vu166, vu8.KillerNameESP and vu164 and vu164 or "", vu14.Killer, Vector3.new(0, 4, 0))
+                                if vu167 then
+                                    table.insert(vu9.killers, vu167)
+                                    if vu8.KillerDistance then
+                                        local v169 = game:GetService("RunService").Heartbeat:Connect(function()
+                                            if vu167 and (vu167.Parent and (vu166 and vu166.Parent)) then
+                                                local v168 = vu134(vu166.Position)
+                                                vu167.TextLabel.Text = vu164 .. " [" .. v168 .. "m]"
+                                            end
+                                        end)
+                                        table.insert(vu10.killers, v169)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            return
+        end
+    else
+        return
+    end
+end
+local function vu188()
+    vu144("items")
+    if vu8.ItemsHighlight or (vu8.ItemsNameESP or vu8.ItemsDistance) then
+        local function vu181(p171)
+            local v172, v173, v174 = pairs(p171:GetChildren())
+            while true do
+                local vu175
+                v174, vu175 = v172(v173, v174)
+                if v174 == nil then
+                    break
+                end
+                if vu175:IsA("Tool") then
+                    local vu176 = vu175:FindFirstChild("Handle") or vu175:FindFirstChildWhichIsA("BasePart")
+                    if vu176 then
+                        local v177 = vu8.ItemsHighlight and vu130(vu175, vu14.Items)
+                        if v177 then
+                            table.insert(vu9.items, v177)
+                        end
+                        if vu8.ItemsNameESP or vu8.ItemsDistance then
+                            local vu178 = vu124(vu176, vu8.ItemsNameESP and (vu175.Name or "") or "", vu14.Items, Vector3.new(0, 2, 0))
+                            if vu178 then
+                                table.insert(vu9.items, vu178)
+                                if vu8.ItemsDistance then
+                                    local v180 = game:GetService("RunService").Heartbeat:Connect(function()
+                                        if vu178 and (vu178.Parent and (vu176 and vu176.Parent)) then
+                                            local v179 = vu134(vu176.Position)
+                                            vu178.TextLabel.Text = vu175.Name .. " [" .. v179 .. "m]"
+                                        end
+                                    end)
+                                    table.insert(vu10.items, v180)
+                                end
+                            end
+                        end
+                    end
+                elseif vu175:IsA("Folder") or vu175:IsA("Model") then
+                    vu181(vu175)
+                end
+            end
+        end
+        local v182 = {
+            workspace,
+            workspace:FindFirstChild("Map")
+        }
+        local v183, v184, v185 = pairs(v182)
+        local v186 = vu181
+        while true do
+            local v187
+            v185, v187 = v183(v184, v185)
+            if v185 == nil then
+                break
+            end
+            if v187 then
+                v186(v187)
+            end
+        end
+    end
+end
+local function vu206()
+    vu144("generators")
+    if vu8.GeneratorsHighlight or (vu8.GeneratorsNameESP or vu8.GeneratorsDistance) then
+        local function vu199(p189)
+            local v190, v191, v192 = pairs(p189:GetChildren())
+            while true do
+                local v193
+                v192, v193 = v190(v191, v192)
+                if v192 == nil then
+                    break
+                end
+                if v193.Name:lower():find("generator") or v193.Name:lower():find("gen") then
+                    local vu194 = v193:FindFirstChildWhichIsA("BasePart") or v193
+                    local v195 = vu8.GeneratorsHighlight and vu130(v193, vu14.Generator)
+                    if v195 then
+                        table.insert(vu9.generators, v195)
+                    end
+                    if vu8.GeneratorsNameESP or vu8.GeneratorsDistance then
+                        local vu196 = vu124(vu194, vu8.GeneratorsNameESP and "Generator" or "", vu14.Generator, Vector3.new(0, 5, 0))
+                        if vu196 then
+                            table.insert(vu9.generators, vu196)
+                            if vu8.GeneratorsDistance then
+                                local v198 = game:GetService("RunService").Heartbeat:Connect(function()
+                                    if vu196 and (vu196.Parent and (vu194 and vu194.Parent)) then
+                                        local v197 = vu134(vu194.Position)
+                                        vu196.TextLabel.Text = "Generator" .. " [" .. v197 .. "m]"
+                                    end
+                                end)
+                                table.insert(vu10.generators, v198)
+                            end
+                        end
+                    end
+                elseif v193:IsA("Folder") or v193:IsA("Model") then
+                    vu199(v193)
+                end
+            end
+        end
+        local v200 = {
+            workspace,
+            workspace:FindFirstChild("Map")
+        }
+        local v201, v202, v203 = pairs(v200)
+        local v204 = vu199
+        while true do
+            local v205
+            v203, v205 = v201(v202, v203)
+            if v203 == nil then
+                break
+            end
+            if v205 then
+                v204(v205)
+            end
+        end
+    end
+end
+local function vu207()
+    pcall(function()
+        vu157()
+        vu170()
+        vu188()
+        vu206()
+    end)
+end
+local vu208 = nil
+local function vu210()
+    if vu208 then
+        pcall(function()
+            vu208:Disconnect()
+        end)
+    end
+    vu208 = game:GetService("RunService").Heartbeat:Connect(function()
+        local v209 = tick()
+        if (vu4.espUpdateInterval or 1) <= v209 - (vu3.lastEspUpdate or 0) then
+            vu3.lastEspUpdate = v209
+            vu207()
+        end
+    end)
+end
+v32:Divider({
+    Title = vu24("HIGHLIGHT ESP", vu13.Primary, vu13.Text)
+})
+v32:Section({
+    Title = vu24("HIGHLIGHT ESP", vu13.Primary, vu13.Text)
+})
+local v211 = v32
+local v212 = v32.Toggle
+local v213 = {
+    Title = vu24("Survivors Highlight", vu13.Primary, vu13.Text),
+    Desc = "Highlight survivors with green outline"
+}
+local v214 = "Value"
+local v215
+if vu8 then
+    v215 = vu8.SurvivorsHighlight or false
+else
+    v215 = false
+end
+v213[v214] = v215
+v213.Icon = "user"
+function v213.Callback(p216)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.SurvivorsHighlight = p216
+    vu207()
+end
+v212(v211, v213)
+local v217 = v32
+local v218 = v32.Toggle
+local v219 = {
+    Title = vu24("Killer Highlight", vu13.Primary, vu13.Text),
+    Desc = "Highlight killer with red outline"
+}
+local v220 = "Value"
+local v221
+if vu8 then
+    v221 = vu8.KillerHighlight or false
+else
+    v221 = false
+end
+v219[v220] = v221
+v219.Icon = "skull"
+function v219.Callback(p222)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.KillerHighlight = p222
+    vu207()
+end
+v218(v217, v219)
+local v223 = v32
+local v224 = v32.Toggle
+local v225 = {
+    Title = vu24("Items Highlight", vu13.Primary, vu13.Text),
+    Desc = "Highlight items with purple outline"
+}
+local v226 = "Value"
+local v227
+if vu8 then
+    v227 = vu8.ItemsHighlight or false
+else
+    v227 = false
+end
+v225[v226] = v227
+v225.Icon = "package"
+function v225.Callback(p228)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.ItemsHighlight = p228
+    vu207()
+end
+v224(v223, v225)
+local v229 = v32
+local v230 = v32.Toggle
+local v231 = {
+    Title = vu24("Generators Highlight", vu13.Primary, vu13.Text),
+    Desc = "Highlight generators with blue outline"
+}
+local v232 = "Value"
+local v233
+if vu8 then
+    v233 = vu8.GeneratorsHighlight or false
+else
+    v233 = false
+end
+v231[v232] = v233
+v231.Icon = "zap"
+function v231.Callback(p234)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.GeneratorsHighlight = p234
+    vu207()
+end
+v230(v229, v231)
+v32:Divider({
+    Title = vu24("NAME ESP", vu13.Primary, vu13.Text)
+})
+v32:Section({
+    Title = vu24("NAME ESP", vu13.Primary, vu13.Text)
+})
+local v235 = v32
+local v236 = v32.Toggle
+local v237 = {
+    Title = vu24("Survivors Name ESP", vu13.Primary, vu13.Text),
+    Desc = "Show survivor names"
+}
+local v238 = "Value"
+local v239
+if vu8 then
+    v239 = vu8.SurvivorsNameESP or false
+else
+    v239 = false
+end
+v237[v238] = v239
+v237.Icon = "user"
+function v237.Callback(p240)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.SurvivorsNameESP = p240
+    vu207()
+end
+v236(v235, v237)
+local v241 = v32
+local v242 = v32.Toggle
+local v243 = {
+    Title = vu24("Killer Name ESP", vu13.Primary, vu13.Text),
+    Desc = "Show killer name"
+}
+local v244 = "Value"
+local v245
+if vu8 then
+    v245 = vu8.KillerNameESP or false
+else
+    v245 = false
+end
+v243[v244] = v245
+v243.Icon = "skull"
+function v243.Callback(p246)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.KillerNameESP = p246
+    vu207()
+end
+v242(v241, v243)
+local v247 = v32
+local v248 = v32.Toggle
+local v249 = {
+    Title = vu24("Items Name ESP", vu13.Primary, vu13.Text),
+    Desc = "Show item names"
+}
+local v250 = "Value"
+local v251
+if vu8 then
+    v251 = vu8.ItemsNameESP or false
+else
+    v251 = false
+end
+v249[v250] = v251
+v249.Icon = "package"
+function v249.Callback(p252)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.ItemsNameESP = p252
+    vu207()
+end
+v248(v247, v249)
+local v253 = v32
+local v254 = v32.Toggle
+local v255 = {
+    Title = vu24("Generators Name ESP", vu13.Primary, vu13.Text),
+    Desc = "Show generator names"
+}
+local v256 = "Value"
+local v257
+if vu8 then
+    v257 = vu8.GeneratorsNameESP or false
+else
+    v257 = false
+end
+v255[v256] = v257
+v255.Icon = "zap"
+function v255.Callback(p258)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.GeneratorsNameESP = p258
+    vu207()
+end
+v254(v253, v255)
+v32:Divider({
+    Title = vu24("DISTANCE ESP", vu13.Primary, vu13.Text)
+})
+v32:Section({
+    Title = vu24("DISTANCE ESP", vu13.Primary, vu13.Text)
+})
+local v259 = v32
+local v260 = v32.Toggle
+local v261 = {
+    Title = vu24("Survivors Distance", vu13.Primary, vu13.Text),
+    Desc = "Show distance to survivors"
+}
+local v262 = "Value"
+local v263
+if vu8 then
+    v263 = vu8.SurvivorsDistance or false
+else
+    v263 = false
+end
+v261[v262] = v263
+v261.Icon = "user"
+function v261.Callback(p264)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.SurvivorsDistance = p264
+    vu207()
+end
+v260(v259, v261)
+local v265 = v32
+local v266 = v32.Toggle
+local v267 = {
+    Title = vu24("Killer Distance", vu13.Primary, vu13.Text),
+    Desc = "Show distance to killer"
+}
+local v268 = "Value"
+local v269
+if vu8 then
+    v269 = vu8.KillerDistance or false
+else
+    v269 = false
+end
+v267[v268] = v269
+v267.Icon = "skull"
+function v267.Callback(p270)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.KillerDistance = p270
+    vu207()
+end
+v266(v265, v267)
+local v271 = v32
+local v272 = v32.Toggle
+local v273 = {
+    Title = vu24("Items Distance", vu13.Primary, vu13.Text),
+    Desc = "Show distance to items"
+}
+local v274 = "Value"
+local v275
+if vu8 then
+    v275 = vu8.ItemsDistance or false
+else
+    v275 = false
+end
+v273[v274] = v275
+v273.Icon = "package"
+function v273.Callback(p276)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.ItemsDistance = p276
+    vu207()
+end
+v272(v271, v273)
+local v277 = v32
+local v278 = v32.Toggle
+local v279 = {
+    Title = vu24("Generators Distance", vu13.Primary, vu13.Text),
+    Desc = "Show distance to generators"
+}
+local v280 = "Value"
+local v281
+if vu8 then
+    v281 = vu8.GeneratorsDistance or false
+else
+    v281 = false
+end
+v279[v280] = v281
+v279.Icon = "zap"
+function v279.Callback(p282)
+    if not vu8 then
+        vu8 = {}
+    end
+    vu8.GeneratorsDistance = p282
+    vu207()
+end
+v278(v277, v279)
+v32:Divider({
+    Title = vu24("ESP SETTINGS", vu13.Primary, vu13.Text)
+})
+v32:Section({
+    Title = vu24("ESP SETTINGS", vu13.Primary, vu13.Text)
+})
+v32:Slider({
+    Title = vu24("ESP Update Interval", vu13.Primary, vu13.Text),
+    Desc = "Time between ESP updates (seconds)",
+    Step = 0.1,
+    Value = {
+        Min = 0.1,
+        Max = 2,
+        Default = vu4.espUpdateInterval or 0.3
+    },
+    Callback = function(p283)
+        vu4.espUpdateInterval = p283
+        vu210()
+    end
+})
+v32:Button({
+    Title = vu24("Refresh ESP", vu13.Primary, vu13.Accent),
+    Desc = "Force update all ESP elements",
+    Icon = "refresh-cw",
+    Callback = vu207
+})
+v32:Button({
+    Title = vu24("Clear All ESP", vu13.Primary, vu13.Accent),
+    Desc = "Remove all ESP elements",
+    Icon = "trash-2",
+    Callback = cleanupAllEsp
+})
+vu210()
+game.Players.LocalPlayer.CharacterAdded:Connect(function(_)
+    cleanupAllEsp()
+    task.wait(1)
+    vu207()
+end)
+game.Players.LocalPlayer.CharacterRemoving:Connect(function()
+    cleanupAllEsp()
+end)
+game:GetService("RunService").Heartbeat:Connect(function()
+    if not workspace:FindFirstChild("Players") then
+        cleanupAllEsp()
+    end
+end)
+local function vu312(p284, p285)
+    local v286 = {}
+    if p284 then
+        local v287 = workspace.Players:FindFirstChild("Survivors")
+        if v287 then
+            local v288, v289, v290 = pairs(v287:GetChildren())
+            while true do
+                local v291
+                v290, v291 = v288(v289, v290)
+                if v290 == nil then
+                    break
+                end
+                if v291:IsA("Model") and (v291:FindFirstChild("Humanoid") and v291.Humanoid.Health > 0) then
+                    table.insert(v286, v291)
+                end
+            end
+        end
+    elseif p285 then
+        local v292 = workspace.Players:FindFirstChild("Killers")
+        if v292 then
+            local v293, v294, v295 = pairs(v292:GetChildren())
+            while true do
+                local v296
+                v295, v296 = v293(v294, v295)
+                if v295 == nil then
+                    break
+                end
+                if v296:IsA("Model") and (v296:FindFirstChild("Humanoid") and v296.Humanoid.Health > 0) then
+                    table.insert(v286, v296)
+                end
+            end
+        end
+    else
+        local v297 = workspace.Players:FindFirstChild("Survivors")
+        if v297 then
+            local v298, v299, v300 = pairs(v297:GetChildren())
+            while true do
+                local v301
+                v300, v301 = v298(v299, v300)
+                if v300 == nil then
+                    break
+                end
+                if v301:IsA("Model") and (v301:FindFirstChild("Humanoid") and v301.Humanoid.Health > 0) then
+                    table.insert(v286, v301)
+                end
+            end
+        end
+    end
+    if # v286 == 0 then
+        return nil
+    end
+    local v302 = game.Players.LocalPlayer.Character
+    if not v302 then
+        return nil
+    end
+    local v303 = v302:FindFirstChild("HumanoidRootPart")
+    if not v303 then
+        return nil
+    end
+    local v304 = math.huge
+    local v305, v306, v307 = pairs(v286)
+    local v308 = nil
+    while true do
+        local v309
+        v307, v309 = v305(v306, v307)
+        if v307 == nil then
+            break
+        end
+        local v310 = v309:FindFirstChild("HumanoidRootPart")
+        if v310 then
+            local v311 = (v310.Position - v303.Position).Magnitude
+            if v311 < v304 then
+                v308 = v309
+                v304 = v311
+            end
+        end
+    end
+    return v308
+end
+local function vu319(p313, p314)
+    if p313 and p313:FindFirstChild("HumanoidRootPart") then
+        local v315 = game.Players.LocalPlayer.Character
+        if v315 then
+            local v316 = v315:FindFirstChild("HumanoidRootPart")
+            if v316 then
+                local v317 = p313.HumanoidRootPart
+                local v318 = tick()
+                if not p314 then
+                    p314 = 2
+                end
+                while tick() - v318 < p314 and (p313 and (p313.Parent and p313:FindFirstChild("HumanoidRootPart"))) do
+                    workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, v317.Position)
+                    v316.CFrame = CFrame.lookAt(v316.Position, Vector3.new(v317.Position.X, v317.Position.Y, v317.Position.Z))
+                    task.wait()
+                end
+            end
+        else
+            return
+        end
+    else
+        return
+    end
+end
+local function vu326(pu320, pu321, pu322)
+    if vu7[pu320] then
+        vu7[pu320]:Disconnect()
+    end
+    vu7[pu320] = game.ReplicatedStorage.Modules.Network.RemoteEvent.OnClientEvent:Connect(function(...)
+        local v323 = {
+            ...
+        }
+        if # v323 >= 2 and v323[1] == "UseActorAbility" then
+            local v324 = v323[2]
+            local v325 = table.find(pu321, v324) and vu312(string.find(pu320, "Killer") ~= nil, pu322)
+            if v325 then
+                vu319(v325, 1.5)
+            end
+        end
+    end)
+end
+local function vu334(p327, p328)
+    vu11[p327] = p328
+    if p328 then
+        local v329 = vu12[p327]
+        if v329 then
+            if type(v329.targetKiller) ~= "table" then
+                vu326(p327, v329.abilities, v329.targetKiller)
+            else
+                local v330, v331, v332 = pairs(v329.targetKiller)
+                while true do
+                    local v333
+                    v332, v333 = v330(v331, v332)
+                    if v332 == nil then
+                        break
+                    end
+                    vu326(p327, {
+                        v332
+                    }, v333)
+                end
+            end
+        end
+    elseif vu7[p327] then
+        vu7[p327]:Disconnect()
+        vu7[p327] = nil
+    end
+end
+game.Players.LocalPlayer.CharacterAdded:Connect(function(p335)
+    task.wait(1)
+    local _ = p335.Name
+    local v336, v337, v338 = pairs(vu11)
+    while true do
+        local v339
+        v338, v339 = v336(v337, v338)
+        if v338 == nil then
+            break
+        end
+        if v339 then
+            vu334(v338, false)
+        end
+    end
+end)
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Section({
+    Title = vu24("SURVIVOR AIMBOT", vu13.Primary, vu13.Text)
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Chance Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Chance\'s Shoot ability",
+    Value = vu11.Chance,
+    Icon = "crosshair",
+    Callback = function(p340)
+        vu334("Chance", p340)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Taph Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Taph\'s SubspaceTripmine",
+    Value = vu11.Taph,
+    Icon = "crosshair",
+    Callback = function(p341)
+        vu334("Taph", p341)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Dusekkar Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Dusekkar\'s abilities",
+    Value = vu11.Dusekkar,
+    Icon = "crosshair",
+    Callback = function(p342)
+        vu334("Dusekkar", p342)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Guest1337 Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Guest1337\'s abilities",
+    Value = vu11.Guest1337,
+    Icon = "crosshair",
+    Callback = function(p343)
+        vu334("Guest1337", p343)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Two Time Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Two Time\'s abilities",
+    Value = vu11.TwoTime,
+    Icon = "crosshair",
+    Callback = function(p344)
+        vu334("TwoTime", p344)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Elliot Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Elliot\'s ThrowPizza",
+    Value = vu11.Elliot,
+    Icon = "crosshair",
+    Callback = function(p345)
+        vu334("Elliot", p345)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Shedletsky Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Shedletsky\'s Slash",
+    Value = vu11.Shedletsky,
+    Icon = "crosshair",
+    Callback = function(p346)
+        vu334("Shedletsky", p346)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Section({
+    Title = vu24("KILLER AIMBOT", vu13.Primary, vu13.Text)
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Noli Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Noli\'s abilities",
+    Value = vu11.Noli,
+    Icon = "crosshair",
+    Callback = function(p347)
+        vu334("Noli", p347)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("1x1x1x1 Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for 1x1x1x1\'s abilities",
+    Value = vu11.OneXOne,
+    Icon = "crosshair",
+    Callback = function(p348)
+        vu334("OneXOne", p348)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("c001kidd Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim",
+    Value = vu11.C001kidd,
+    Icon = "crosshair",
+    Callback = function(p349)
+        vu334("C001kidd", p349)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for John Doe\'s abilities",
+    Value = vu11.JohnDoe,
+    Icon = "crosshair",
+    Callback = function(p350)
+        vu334("JohnDoe", p350)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+v33:Toggle({
+    Title = vu24("Slasher Aimbot", vu13.Primary, vu13.Text),
+    Desc = "Auto-aim for Slasher\'s abilities",
+    Value = vu11.Slasher,
+    Icon = "crosshair",
+    Callback = function(p351)
+        vu334("Slasher", p351)
+    end
+})
+v33:Divider({
+    Title = vu24("INFO", vu13.Primary, vu13.Text)
+})
+local function vu354(p352, p353)
+    if p352 and p352:IsA("Instance") then
+        return p352:FindFirstChild(p353)
+    else
+        return nil
+    end
+end
+local function vu362()
+    local v355 = game.Players.LocalPlayer
+    local v356 = vu354(workspace.Players, "Survivors")
+    if not v356 then
+        return false
+    end
+    local v357, v358, v359 = pairs(v356:GetChildren())
+    while true do
+        local v360
+        v359, v360 = v357(v358, v359)
+        if v359 == nil then
+            break
+        end
+        if v360:IsA("Model") then
+            local v361 = v360:GetAttribute("Username")
+            if v361 and v361 == v355.Name then
+                return true
+            end
+        end
+    end
+    return false
+end
+local function vu370()
+    local v363 = {}
+    local v364 = vu354(workspace.Map, "Ingame")
+    if v364 then
+        local v365 = vu354(v364, "Map")
+        if v365 then
+            local v366, v367, v368 = pairs(v365:GetChildren())
+            while true do
+                local v369
+                v368, v369 = v366(v367, v368)
+                if v368 == nil then
+                    break
+                end
+                if v369.Name == "Generator" then
+                    table.insert(v363, v369)
+                end
+            end
+        end
+    end
+    return v363
+end
+local function vu373(p371)
+    local v372 = vu354(p371, "Progress")
+    return not (v372 and v372:IsA("NumberValue")) and 0 or v372.Value
+end
+local function vu380()
+    local v374 = vu370()
+    local v375, v376, v377 = pairs(v374)
+    local v378 = {}
+    while true do
+        local v379
+        v377, v379 = v375(v376, v377)
+        if v377 == nil then
+            break
+        end
+        if vu373(v379) < 100 then
+            table.insert(v378, v379)
+        end
+    end
+    return v378
+end
+local function vu390(p381)
+    local v382 = vu354(p381, "Instances")
+    if v382 then
+        local v383 = vu354(v382, "Cube.001")
+        if v383 and v383:IsA("BasePart") then
+            return v383.Position
+        end
+    end
+    local v384 = vu354(p381, "Positions")
+    if v384 then
+        local v385 = vu354(v384, "Center")
+        if v385 and v385:IsA("BasePart") then
+            return v385.Position
+        end
+    end
+    local v386, v387, v388 = pairs(p381:GetDescendants())
+    while true do
+        local v389
+        v388, v389 = v386(v387, v388)
+        if v388 == nil then
+            break
+        end
+        if v389:IsA("BasePart") then
+            return v389.Position
+        end
+    end
+    return Vector3.new(0, 0, 0)
+end
+local function vu398()
+    local v391 = game.Players.LocalPlayer
+    local v392 = workspace.Players:FindFirstChild("Survivors")
+    if not v392 then
+        return nil
+    end
+    local v393, v394, v395 = pairs(v392:GetChildren())
+    while true do
+        local v396
+        v395, v396 = v393(v394, v395)
+        if v395 == nil then
+            break
+        end
+        if v396:IsA("Model") then
+            local v397 = v396:GetAttribute("Username")
+            if v397 and v397 == v391.Name then
+                return v396
+            end
+        end
+    end
+    return nil
+end
+local function vu410()
+    local v399 = vu398()
+    if not v399 then
+        return nil
+    end
+    local v400 = vu354(v399, "HumanoidRootPart")
+    if not v400 then
+        return nil
+    end
+    local v401 = vu380()
+    if # v401 == 0 then
+        return nil
+    end
+    local v402 = math.huge
+    local v403, v404, v405 = pairs(v401)
+    local v406 = nil
+    while true do
+        local v407
+        v405, v407 = v403(v404, v405)
+        if v405 == nil then
+            break
+        end
+        local v408 = vu390(v407)
+        if v408 ~= Vector3.new(0, 0, 0) then
+            local v409 = (v408 - v400.Position).Magnitude
+            if v409 < v402 then
+                v406 = v407
+                v402 = v409
+            end
+        end
+    end
+    return v406
+end
+local function vu415(p411)
+    local v412 = vu398()
+    if not v412 then
+        return false
+    end
+    local v413 = vu354(v412, "HumanoidRootPart")
+    if not v413 then
+        return false
+    end
+    local v414 = p411 + Vector3.new(0, 0, 0)
+    v413.CFrame = CFrame.new(v414)
+    return true
+end
+local function vu423(p416)
+    if vu2.promptActivated then
+        return true
+    end
+    local v417 = vu354(p416, "Main")
+    if not v417 then
+        return false
+    end
+    local v418 = vu354(v417, "Prompt")
+    local v419
+    if v418 then
+        v419 = v418
+    else
+        local v420, v421, v422 = pairs(v417:GetDescendants())
+        while true do
+            v422, v419 = v420(v421, v422)
+            if v422 == nil then
+                v419 = v418
+                break
+            end
+            if v419:IsA("ProximityPrompt") then
+                break
+            end
+        end
+    end
+    if not (v419 and v419:IsA("ProximityPrompt")) then
+        return false
+    end
+    fireproximityprompt(v419)
+    vu2.promptActivated = true
+    return true
+end
+local function vu428(pu424)
+    local v425 = vu354(pu424, "Remotes")
+    if not v425 then
+        return false
+    end
+    local vu426 = vu354(v425, "RE")
+    if not vu426 or (not vu426:IsA("RemoteEvent") or vu5.repairDebounce[pu424]) then
+        return false
+    end
+    vu5.repairDebounce[pu424] = true
+    local v427 = pcall(function()
+        vu426:FireServer()
+    end)
+    task.delay(3, function()
+        vu5.repairDebounce[pu424] = nil
+    end)
+    return v427
+end
+local function vu429()
+    if vu2.autoRepairActive then
+        vu2.autoRepairActive = false
+        if vu6.autoRepairConnection then
+            vu6.autoRepairConnection:Disconnect()
+            vu6.autoRepairConnection = nil
+        end
+        vu5.currentRepairGenerator = nil
+        vu5.repairDebounce = {}
+        vu2.promptActivated = false
+        vu2.teleportedToGenerator = false
+    end
+end
+local function vu431()
+    if not vu2.autoRepairActive then
+        vu2.autoRepairActive = true
+        vu6.autoRepairConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoRepairActive then
+                if vu362() then
+                    if vu398() then
+                        if vu5.currentRepairGenerator and (not vu5.currentRepairGenerator.Parent or vu373(vu5.currentRepairGenerator) >= 100) then
+                            vu5.currentRepairGenerator = nil
+                            vu2.promptActivated = false
+                            vu2.teleportedToGenerator = false
+                            vu3.teleportTime = 0
+                        end
+                        if not vu5.currentRepairGenerator then
+                            vu5.currentRepairGenerator = vu410()
+                            if not vu5.currentRepairGenerator then
+                                vu429()
+                                return
+                            end
+                            vu2.promptActivated = false
+                            vu2.teleportedToGenerator = false
+                            vu3.teleportTime = 0
+                        end
+                        if not vu2.teleportedToGenerator then
+                            local v430 = vu390(vu5.currentRepairGenerator)
+                            if v430 ~= Vector3.new(0, 0, 0) then
+                                vu415(v430)
+                                vu2.teleportedToGenerator = true
+                                vu3.teleportTime = tick()
+                            end
+                        end
+                        if not vu2.promptActivated and (vu2.teleportedToGenerator and tick() - vu3.teleportTime >= 0.5) then
+                            vu423(vu5.currentRepairGenerator)
+                            vu2.promptActivated = true
+                        end
+                        if vu2.promptActivated then
+                            vu428(vu5.currentRepairGenerator)
+                        end
+                        if vu373(vu5.currentRepairGenerator) >= 100 then
+                            task.wait(vu4.teleportCooldown)
+                            vu5.currentRepairGenerator = nil
+                            vu2.promptActivated = false
+                            vu2.teleportedToGenerator = false
+                            vu3.teleportTime = 0
+                        end
+                        task.wait(vu4.repairCheckInterval)
+                    else
+                        vu429()
+                    end
+                else
+                    vu429()
+                    return
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu432()
+    return tick() - vu3.lastFriedChickenTime >= vu4.friedChickenCooldown
+end
+local function vu433()
+    if not vu432() then
+        return false
+    end
+    if not pcall(function()
+        game.ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack({
+            "UseActorAbility",
+            "FriedChicken"
+        }))
+    end) then
+        return false
+    end
+    vu3.lastFriedChickenTime = tick()
+    return true
+end
+local function vu436()
+    if not vu2.autoFriedChicken then
+        vu2.autoFriedChicken = true
+        vu6.friedChickenConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoFriedChicken then
+                local v434 = vu398()
+                if v434 then
+                    local v435 = v434:FindFirstChildOfClass("Humanoid")
+                    if v435 and v435.Health > 0 then
+                        if v435.Health / v435.MaxHealth * 100 <= vu4.friedChickenThreshold and vu432() then
+                            vu433()
+                        end
+                    end
+                else
+                    return
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu437()
+    if vu2.autoFriedChicken then
+        vu2.autoFriedChicken = false
+        if vu6.friedChickenConnection then
+            vu6.friedChickenConnection:Disconnect()
+            vu6.friedChickenConnection = nil
+        end
+    end
+end
+local function vu439()
+    local v438 = vu398()
+    if v438 then
+        return v438.Name == "Chance"
+    else
+        return false
+    end
+end
+local function vu440()
+    return tick() - vu3.lastCoinFlipTime >= vu4.coinFlipCooldown
+end
+local function vu441()
+    if not vu440() then
+        return false
+    end
+    if not pcall(function()
+        game.ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack({
+            "UseActorAbility",
+            "CoinFlip"
+        }))
+    end) then
+        return false
+    end
+    vu3.lastCoinFlipTime = tick()
+    return true
+end
+local function vu442()
+    if not vu2.autoCoinFlip then
+        vu2.autoCoinFlip = true
+        vu6.coinFlipConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoCoinFlip then
+                if vu362() and vu439() then
+                    if vu440() then
+                        vu441()
+                    end
+                else
+                    stopAutoCoinFlip()
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu443()
+    if vu2.autoCoinFlip then
+        vu2.autoCoinFlip = false
+        if vu6.coinFlipConnection then
+            vu6.coinFlipConnection:Disconnect()
+            vu6.coinFlipConnection = nil
+        end
+    end
+end
+local function vu444()
+    return tick() - vu3.lastCloneTime >= vu4.cloneCooldown
+end
+local function vu445()
+    if not vu444() then
+        return false
+    end
+    if not pcall(function()
+        game.ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack({
+            "UseActorAbility",
+            "Clone"
+        }))
+    end) then
+        return false
+    end
+    vu3.lastCloneTime = tick()
+    return true
+end
+local function vu450()
+    if not vu2.autoClone then
+        vu2.autoClone = true
+        local v446 = vu398()
+        local v447 = v446 and v446:FindFirstChildOfClass("Humanoid")
+        if v447 then
+            vu5.lastHealth = v447.Health
+        end
+        vu6.cloneConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoClone then
+                if vu362() then
+                    local v448 = vu398()
+                    if v448 then
+                        local v449 = v448:FindFirstChildOfClass("Humanoid")
+                        if v449 and v449.Health > 0 then
+                            if v449.Health < vu5.lastHealth and vu444() then
+                                vu445()
+                            end
+                            vu5.lastHealth = v449.Health
+                        end
+                    else
+                        return
+                    end
+                else
+                    stopAutoClone()
+                    return
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu451()
+    if vu2.autoClone then
+        vu2.autoClone = false
+        if vu6.cloneConnection then
+            vu6.cloneConnection:Disconnect()
+            vu6.cloneConnection = nil
+        end
+    end
+end
+local vu452 = {
+    "rbxassetid://94067586317868",
+    "rbxassetid://107925328038675"
+}
+local function vu460()
+    if not vu6.autoBlockConnection then
+        vu6.autoBlockConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if not (vu2.autoBlockActive and (vu5.isSurvivor and vu5.killerModel)) then
+                return
+            end
+            local v453 = game.Players.LocalPlayer.Character
+            if not (v453 and v453:FindFirstChild("HumanoidRootPart")) then
+                return
+            end
+            if (v453.HumanoidRootPart.Position - vu5.killerModel.HumanoidRootPart.Position).Magnitude > 15 then
+                return
+            end
+            local v454 = vu5.killerModel:FindFirstChildOfClass("Humanoid")
+            local v455 = v454 and v454:FindFirstChildOfClass("Animator")
+            if v455 then
+                local v456, v457, v458 = pairs(v455:GetPlayingAnimationTracks())
+                while true do
+                    local v459
+                    v458, v459 = v456(v457, v458)
+                    if v458 == nil then
+                        break
+                    end
+                    if table.find(vu452, v459.Animation.AnimationId) and vu48("Block") then
+                        game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer("UseActorAbility", "Block")
+                        break
+                    end
+                end
+            end
+        end)
+    end
+end
+local function vu461()
+    if vu6.autoBlockConnection then
+        vu6.autoBlockConnection:Disconnect()
+        vu6.autoBlockConnection = nil
+    end
+end
+local function vu474(p462)
+    local v463 = {
+        workspace.Map.Ingame,
+        workspace.Map.Ingame.Map,
+        workspace.Map
+    }
+    local v464, v465, v466 = pairs(v463)
+    local v467 = {}
+    while true do
+        local v468
+        v466, v468 = v464(v465, v466)
+        if v466 == nil then
+            break
+        end
+        if v468 then
+            local v469 = v468:FindFirstChild(p462)
+            if v469 and v469:FindFirstChild("ItemRoot") then
+                table.insert(v467, v469)
+            end
+            local v470, v471, v472 = pairs(v468:GetDescendants())
+            while true do
+                local v473
+                v472, v473 = v470(v471, v472)
+                if v472 == nil then
+                    break
+                end
+                if v473.Name == p462 and v473:FindFirstChild("ItemRoot") then
+                    table.insert(v467, v473)
+                end
+            end
+        end
+    end
+    return v467
+end
+local function vu481(p475)
+    local v476 = p475:FindFirstChild("ItemRoot")
+    if v476 and v476:IsA("BasePart") then
+        return v476.Position
+    end
+    local v477, v478, v479 = pairs(p475:GetDescendants())
+    while true do
+        local v480
+        v479, v480 = v477(v478, v479)
+        if v479 == nil then
+            break
+        end
+        if v480:IsA("BasePart") then
+            return v480.Position
+        end
+    end
+    return nil
+end
+local function vu485(p482)
+    if not p482 then
+        return false
+    end
+    local v483 = p482:FindFirstChild("ItemRoot")
+    if not v483 then
+        return false
+    end
+    local v484 = v483:FindFirstChildOfClass("ProximityPrompt") or p482:FindFirstChildOfClass("ProximityPrompt")
+    if not (v484 and v484:IsA("ProximityPrompt")) then
+        return false
+    end
+    fireproximityprompt(v484)
+    return true
+end
+local function vu491(p486)
+    local v487 = vu481(p486)
+    if not v487 then
+        return false
+    end
+    local v488 = vu398()
+    if not v488 then
+        return false
+    end
+    local v489 = v488:FindFirstChild("HumanoidRootPart")
+    if not v489 then
+        return false
+    end
+    local v490 = v487 + Vector3.new(0, 3, 0)
+    v489.CFrame = CFrame.new(v490)
+    return true
+end
+local function vu493(p492)
+    if not (p492 and p492.Parent) then
+        return false
+    end
+    if not vu491(p492) then
+        return false
+    end
+    task.wait(0.5)
+    return vu485(p492)
+end
+local function vu508()
+    if not vu2.autoGetItemsActive then
+        vu2.autoGetItemsActive = true
+        vu6.autoGetItemsConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoGetItemsActive then
+                if vu362() then
+                    local v494, v495, v496 = pairs({
+                        "Medkit",
+                        "BloxyCola"
+                    })
+                    local v497 = {}
+                    while true do
+                        local v498
+                        v496, v498 = v494(v495, v496)
+                        if v496 == nil then
+                            break
+                        end
+                        local v499 = vu474(v498)
+                        local v500, v501, v502 = pairs(v499)
+                        while true do
+                            local v503
+                            v502, v503 = v500(v501, v502)
+                            if v502 == nil then
+                                break
+                            end
+                            table.insert(v497, v503)
+                        end
+                    end
+                    local v504, v505, v506 = pairs(v497)
+                    while true do
+                        local v507
+                        v506, v507 = v504(v505, v506)
+                        if v506 == nil then
+                            break
+                        end
+                        if vu2.autoGetItemsActive and (v507 and v507.Parent) then
+                            vu493(v507)
+                            task.wait(vu4.itemPickupCooldown)
+                        end
+                    end
+                    if # v497 == 0 then
+                        stopAutoGetItems()
+                    end
+                else
+                    stopAutoGetItems()
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu509()
+    if vu2.autoGetItemsActive then
+        vu2.autoGetItemsActive = false
+        if vu6.autoGetItemsConnection then
+            vu6.autoGetItemsConnection:Disconnect()
+            vu6.autoGetItemsConnection = nil
+        end
+    end
+end
+local function vu515()
+    if not vu2.autoGetMedkitActive then
+        vu2.autoGetMedkitActive = true
+        vu6.autoGetMedkitConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if not vu2.autoGetMedkitActive then
+                return
+            end
+            if not vu362() then
+                stopAutoGetMedkit()
+                return
+            end
+            local v510 = vu474("Medkit")
+            if # v510 <= 0 then
+                stopAutoGetMedkit()
+            else
+                local v511, v512, v513 = pairs(v510)
+                while true do
+                    local v514
+                    v513, v514 = v511(v512, v513)
+                    if v513 == nil then
+                        break
+                    end
+                    if vu2.autoGetMedkitActive and (v514 and v514.Parent) then
+                        vu493(v514)
+                        break
+                    end
+                end
+            end
+        end)
+    end
+end
+local function vu516()
+    if vu2.autoGetMedkitActive then
+        vu2.autoGetMedkitActive = false
+        if vu6.autoGetMedkitConnection then
+            vu6.autoGetMedkitConnection:Disconnect()
+            vu6.autoGetMedkitConnection = nil
+        end
+    end
+end
+local function vu522()
+    if not vu2.autoGetBloxyColaActive then
+        vu2.autoGetBloxyColaActive = true
+        vu6.autoGetBloxyColaConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if not vu2.autoGetBloxyColaActive then
+                return
+            end
+            if not vu362() then
+                stopAutoGetBloxyCola()
+                return
+            end
+            local v517 = vu474("BloxyCola")
+            if # v517 <= 0 then
+                stopAutoGetBloxyCola()
+            else
+                local v518, v519, v520 = pairs(v517)
+                while true do
+                    local v521
+                    v520, v521 = v518(v519, v520)
+                    if v520 == nil then
+                        break
+                    end
+                    if vu2.autoGetBloxyColaActive and (v521 and v521.Parent) then
+                        vu493(v521)
+                        break
+                    end
+                end
+            end
+        end)
+    end
+end
+local function vu523()
+    if vu2.autoGetBloxyColaActive then
+        vu2.autoGetBloxyColaActive = false
+        if vu6.autoGetBloxyColaConnection then
+            vu6.autoGetBloxyColaConnection:Disconnect()
+            vu6.autoGetBloxyColaConnection = nil
+        end
+    end
+end
+local function vu540()
+    if not vu2.itemAuraActive then
+        vu2.itemAuraActive = true
+        vu6.itemAuraConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.itemAuraActive then
+                if vu362() then
+                    local v524 = vu398()
+                    if v524 then
+                        local v525 = v524:FindFirstChild("HumanoidRootPart")
+                        if v525 then
+                            local v526, v527, v528 = pairs({
+                                "Medkit",
+                                "BloxyCola"
+                            })
+                            local v529 = {}
+                            while true do
+                                local v530
+                                v528, v530 = v526(v527, v528)
+                                if v528 == nil then
+                                    break
+                                end
+                                local v531 = vu474(v530)
+                                local v532, v533, v534 = pairs(v531)
+                                while true do
+                                    local v535
+                                    v534, v535 = v532(v533, v534)
+                                    if v534 == nil then
+                                        break
+                                    end
+                                    table.insert(v529, {
+                                        item = v535,
+                                        position = vu481(v535)
+                                    })
+                                end
+                            end
+                            local v536, v537, v538 = pairs(v529)
+                            while true do
+                                local v539
+                                v538, v539 = v536(v537, v538)
+                                if v538 == nil then
+                                    break
+                                end
+                                if v539.position and (v539.position - v525.Position).Magnitude <= vu4.itemAuraRange then
+                                    vu485(v539.item)
+                                    task.wait(0.1)
+                                end
+                            end
+                            task.wait(0.5)
+                        end
+                    else
+                        return
+                    end
+                else
+                    stopItemAura()
+                    return
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu541()
+    if vu2.itemAuraActive then
+        vu2.itemAuraActive = false
+        if vu6.itemAuraConnection then
+            vu6.itemAuraConnection:Disconnect()
+            vu6.itemAuraConnection = nil
+        end
+    end
+end
+v34:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v34:Section({
+    Title = vu24("AUTO REPAIR", vu13.Primary, vu13.Text)
+})
+v34:Toggle({
+    Title = vu24("Auto Repair Generators", vu13.Primary, vu13.Text),
+    Desc = "Automatically find and repair unfinished generators",
+    Value = false,
+    Icon = "zap",
+    Callback = function(p542)
+        if p542 then
+            if not vu362() then
+                return
+            end
+            vu431()
+        else
+            vu429()
+        end
+    end
+})
+v34:Slider({
+    Title = vu24("Repair Check Interval", vu13.Primary, vu13.Text),
+    Desc = "Time between repair checks (seconds)",
+    Value = {
+        Min = 0.5,
+        Max = 5,
+        Default = vu4.repairCheckInterval
+    },
+    Callback = function(p543)
+        vu4.repairCheckInterval = p543
+    end
+})
+v34:Slider({
+    Title = vu24("Teleport Cooldown", vu13.Primary, vu13.Text),
+    Desc = "Delay after completing a generator (seconds)",
+    Value = {
+        Min = 0.1,
+        Max = 2,
+        Default = vu4.teleportCooldown
+    },
+    Callback = function(p544)
+        vu4.teleportCooldown = p544
+    end
+})
+v34:Divider({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v34:Section({
+    Title = vu24("SURVIVOR SKILLS", vu13.Primary, vu13.Text)
+})
+v34:Toggle({
+    Title = vu24("Auto Fried Chicken", vu13.Primary, vu13.Text),
+    Desc = "Automatically use Fried Chicken when HP is low",
+    Value = false,
+    Icon = "drumstick",
+    Callback = function(p545)
+        if p545 then
+            if not vu362() then
+                return false
+            end
+            vu436()
+        else
+            vu437()
+        end
+    end
+})
+v34:Slider({
+    Title = vu24("HP Threshold (%)", vu13.Primary, vu13.Text),
+    Desc = "HP percentage to activate Fried Chicken",
+    Value = {
+        Min = 10,
+        Max = 90,
+        Default = vu4.friedChickenThreshold
+    },
+    Callback = function(p546)
+        vu4.friedChickenThreshold = p546
+    end
+})
+v34:Toggle({
+    Title = vu24("Auto Coin Flip", vu13.Primary, vu13.Text),
+    Desc = "Automatically use Coin Flip ability on cooldown",
+    Value = false,
+    Icon = "eye",
+    Callback = function(p547)
+        if p547 then
+            if not vu362() then
+                return false
+            end
+            vu442()
+        else
+            vu443()
+        end
+    end
+})
+v34:Slider({
+    Title = vu24("Coin Flip Cooldown", vu13.Primary, vu13.Text),
+    Desc = "Time between Coin Flip uses (seconds)",
+    Value = {
+        Min = 1,
+        Max = 10,
+        Default = vu4.coinFlipCooldown
+    },
+    Callback = function(p548)
+        vu4.coinFlipCooldown = tonumber(p548) or 5
+    end
+})
+v34:Toggle({
+    Title = vu24("Auto Clone", vu13.Primary, vu13.Text),
+    Desc = "Automatically use Clone when taking damage",
+    Value = false,
+    Icon = "copy",
+    Callback = function(p549)
+        if p549 then
+            if not vu362() then
+                return false
+            end
+            vu450()
+        else
+            vu451()
+        end
+    end
+})
+v34:Toggle({
+    Title = vu24("Auto Block", vu13.Primary, vu13.Text),
+    Desc = "Auto blocking killer attacks",
+    Value = false,
+    Icon = "shield",
+    Callback = function(p550)
+        vu2.autoBlockActive = p550
+        if p550 then
+            if not vu5.isSurvivor then
+                return false
+            end
+            vu460()
+        else
+            vu461()
+        end
+    end
+})
+v34:Divider({
+    Title = vu24("AUTO ITEMS", vu13.Primary, vu13.Text)
+})
+v34:Section({
+    Title = vu24("AUTO ITEMS", vu13.Primary, vu13.Text)
+})
+v34:Toggle({
+    Title = vu24("Auto Get Items", vu13.Primary, vu13.Text),
+    Desc = "Teleport to and pickup all items on the map",
+    Value = false,
+    Icon = "package",
+    Callback = function(p551)
+        if p551 then
+            if not vu362() then
+                vu1:Notify({
+                    Title = "Error",
+                    Content = "You must be a survivor to use this",
+                    Duration = 3
+                })
+                return false
+            end
+            vu508()
+        else
+            vu509()
+        end
+    end
+})
+v34:Toggle({
+    Title = vu24("Auto Get Medkit", vu13.Primary, vu13.Text),
+    Desc = "Teleport to and pickup medkits",
+    Value = false,
+    Icon = "heart",
+    Callback = function(p552)
+        if p552 then
+            if not vu362() then
+                vu1:Notify({
+                    Title = "Error",
+                    Content = "You must be a survivor to use this",
+                    Duration = 3
+                })
+                return false
+            end
+            vu515()
+        else
+            vu516()
+        end
+    end
+})
+v34:Toggle({
+    Title = vu24("Auto Get Bloxy Cola", vu13.Primary, vu13.Text),
+    Desc = "Teleport to and pickup Bloxy Cola",
+    Value = false,
+    Icon = "coffee",
+    Callback = function(p553)
+        if p553 then
+            if not vu362() then
+                vu1:Notify({
+                    Title = "Error",
+                    Content = "You must be a survivor to use this",
+                    Duration = 3
+                })
+                return false
+            end
+            vu522()
+        else
+            vu523()
+        end
+    end
+})
+v34:Toggle({
+    Title = vu24("Item Aura", vu13.Primary, vu13.Text),
+    Desc = "Auto pickup items when nearby",
+    Value = false,
+    Icon = "zap",
+    Callback = function(p554)
+        if p554 then
+            if not vu362() then
+                vu1:Notify({
+                    Title = "Error",
+                    Content = "You must be a survivor to use this",
+                    Duration = 3
+                })
+                return false
+            end
+            vu540()
+        else
+            vu541()
+        end
+    end
+})
+v34:Slider({
+    Title = vu24("Item Aura Range", vu13.Primary, vu13.Text),
+    Desc = "Distance for auto item pickup",
+    Value = {
+        Min = 1,
+        Max = 15,
+        Default = vu4.itemAuraRange
+    },
+    Callback = function(p555)
+        vu4.itemAuraRange = p555
+    end
+})
+v34:Slider({
+    Title = vu24("Pickup Cooldown", vu13.Primary, vu13.Text),
+    Desc = "Time between item pickups (seconds)",
+    Value = {
+        Min = 0.5,
+        Max = 3,
+        Default = vu4.itemPickupCooldown
+    },
+    Callback = function(p556)
+        vu4.itemPickupCooldown = p556
+    end
+})
+game.Players.LocalPlayer.CharacterAdded:Connect(function(_)
+    if vu2.autoGetItemsActive then
+        pcall(vu509)
+        vu2.autoGetItemsActive = false
+    end
+    if vu2.autoGetMedkitActive then
+        pcall(vu516)
+        vu2.autoGetMedkitActive = false
+    end
+    if vu2.autoGetBloxyColaActive then
+        pcall(vu523)
+        vu2.autoGetBloxyColaActive = false
+    end
+    if vu2.itemAuraActive then
+        pcall(vu541)
+        vu2.itemAuraActive = false
+    end
+end)
+game.Players.LocalPlayer.CharacterRemoving:Connect(function()
+    if vu2.autoGetItemsActive then
+        vu509()
+    end
+    if vu2.autoGetMedkitActive then
+        vu516()
+    end
+    if vu2.autoGetBloxyColaActive then
+        vu523()
+    end
+    if vu2.itemAuraActive then
+        vu541()
+    end
+end)
+game:GetService("RunService").Heartbeat:Connect(function()
+    if vu2.autoGetItemsActive and not vu362() then
+        vu509()
+    end
+    if vu2.autoGetMedkitActive and not vu362() then
+        vu516()
+    end
+    if vu2.autoGetBloxyColaActive and not vu362() then
+        vu523()
+    end
+    if vu2.itemAuraActive and not vu362() then
+        vu541()
+    end
+end)
+game.Players.LocalPlayer.CharacterAdded:Connect(function(_)
+    if vu2.autoRepairActive then
+        vu429()
+    end
+    if vu2.autoFriedChicken then
+        vu437()
+    end
+    if vu2.autoCoinFlip then
+        vu443()
+    end
+    if vu2.autoClone then
+        vu451()
+    end
+    if vu2.autoBlockActive then
+        vu461()
+        vu2.autoBlockActive = false
+    end
+end)
+game.Players.LocalPlayer.CharacterRemoving:Connect(function()
+    if vu2.autoRepairActive then
+        vu429()
+    end
+    if vu2.autoFriedChicken then
+        vu437()
+    end
+    if vu2.autoCoinFlip then
+        vu443()
+    end
+    if vu2.autoClone then
+        vu451()
+    end
+    if vu2.autoBlockActive then
+        vu461()
+    end
+end)
+game:GetService("RunService").Heartbeat:Connect(function()
+    if vu2.autoRepairActive and not vu362() then
+        vu429()
+    end
+    if vu2.autoFriedChicken and not vu362() then
+        vu437()
+    end
+    if vu2.autoCoinFlip and not (vu362() and vu439()) then
+        vu443()
+    end
+    if vu2.autoClone and not vu362() then
+        vu451()
+    end
+end)
+local function vu568()
+    local v557 = game.Players.LocalPlayer.Character
+    if not v557 then
+        return nil
+    end
+    local v558 = v557:FindFirstChild("HumanoidRootPart")
+    if not v558 then
+        return nil
+    end
+    local v559 = workspace.Players:FindFirstChild("Survivors")
+    if not v559 then
+        return nil
+    end
+    local v560 = math.huge
+    local v561, v562, v563 = pairs(v559:GetChildren())
+    local v564 = nil
+    while true do
+        local v565
+        v563, v565 = v561(v562, v563)
+        if v563 == nil then
+            break
+        end
+        if v565:IsA("Model") and (v565:FindFirstChild("Humanoid") and v565.Humanoid.Health > 0) then
+            local v566 = v565:FindFirstChild("HumanoidRootPart")
+            if v566 then
+                local v567 = (v566.Position - v558.Position).Magnitude
+                if v567 < v560 then
+                    v564 = v565
+                    v560 = v567
+                end
+            end
+        end
+    end
+    return v564
+end
+local function vu576(p569)
+    if p569 and p569:FindFirstChild("HumanoidRootPart") then
+        local v570 = game.Players.LocalPlayer.Character
+        if v570 then
+            local v571 = v570:FindFirstChild("HumanoidRootPart")
+            if v571 then
+                local v572 = p569.HumanoidRootPart
+                if vu2.killAllTeleport then
+                    local v573 = v572.CFrame.LookVector
+                    local v574 = v572.Position - v573 * 2.7 + Vector3.new(0, 1.5, 0)
+                    v571.CFrame = CFrame.new(v574)
+                    v571.CFrame = CFrame.lookAt(v574, v572.Position)
+                elseif vu2.killAllFly then
+                    if not vu2.flying then
+                        vu83()
+                    end
+                    local v575 = (v572.Position - v571.Position).Unit
+                    v570.Humanoid:MoveTo(v571.Position + v575 * 10)
+                else
+                    v570.Humanoid:MoveTo(v572.Position)
+                end
+            end
+        else
+            return
+        end
+    else
+        return
+    end
+end
+local function vu579()
+    local v577 = game.Players.LocalPlayer.Character
+    if not v577 then
+        return "Slash"
+    end
+    local v578 = v577.Name
+    return v578 == "Noli" and "Stab" or (v578 == "c001kidd" and "Punch" or "Slash")
+end
+local function vu581(p580)
+    if vu5.skillCooldowns[p580] and tick() - vu5.skillCooldowns[p580] < 5 then
+        return false
+    end
+    game.ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack({
+        "UseActorAbility",
+        p580
+    }))
+    vu5.skillCooldowns[p580] = tick()
+    return true
+end
+local function vu583()
+    local v582 = vu579()
+    game.ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack({
+        "UseActorAbility",
+        v582
+    }))
+end
+local function vu585()
+    if not vu6.skillConnections.RagingPace then
+        vu6.skillConnections.RagingPace = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoRagingPace then
+                local v584 = game.Players.LocalPlayer.Character
+                if v584 and v584.Name == "Slasher" then
+                    vu581("RagingPace")
+                    task.wait(10)
+                end
+            end
+        end)
+    end
+end
+local function vu587()
+    if not vu6.skillConnections.UnstableEye then
+        vu6.skillConnections.UnstableEye = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoUnstableEye then
+                local v586 = game.Players.LocalPlayer.Character
+                if v586 and v586.Name == "1x1x1x1" then
+                    vu581("UnstableEye")
+                    task.wait(15)
+                end
+            end
+        end)
+    end
+end
+local function vu589()
+    if not vu6.skillConnections.PizzaDelivery then
+        vu6.skillConnections.PizzaDelivery = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.autoPizzaDelivery then
+                local v588 = game.Players.LocalPlayer.Character
+                if v588 and v588.Name == "c001kidd" then
+                    vu581("PizzaDelivery")
+                    task.wait(12)
+                end
+            end
+        end)
+    end
+end
+local function vu591()
+    if not vu6.skillConnections.Error404 then
+        vu6.skillConnections.Error404 = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.auto404Error then
+                local v590 = game.Players.LocalPlayer.Character
+                if v590 and v590.Name == "JohnDoe" then
+                    vu581("404Error")
+                    task.wait(8)
+                end
+            end
+        end)
+    end
+end
+local function vu596()
+    local v592, v593, v594 = pairs(vu6.skillConnections)
+    while true do
+        local v595
+        v594, v595 = v592(v593, v594)
+        if v594 == nil then
+            break
+        end
+        if v595 then
+            v595:Disconnect()
+        end
+    end
+    vu6.skillConnections = {}
+end
+local function vu600()
+    if not vu2.killAllActive then
+        vu2.killAllActive = true
+        local vu597 = game.Players.LocalPlayer
+        local _ = vu597.Character
+        vu6.killAllConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.killAllActive then
+                if vu5.currentTarget and (not vu5.currentTarget.Parent or (not vu5.currentTarget:FindFirstChild("Humanoid") or vu5.currentTarget.Humanoid.Health <= 0)) then
+                    vu5.currentTarget = nil
+                end
+                if not vu5.currentTarget then
+                    vu5.currentTarget = vu568()
+                    if not vu5.currentTarget then
+                        return
+                    end
+                end
+                vu576(vu5.currentTarget)
+                local v598 = vu597.Character
+                if v598 and v598:FindFirstChild("HumanoidRootPart") and vu5.currentTarget:FindFirstChild("HumanoidRootPart") then
+                    local v599 = (vu5.currentTarget.HumanoidRootPart.Position - v598.HumanoidRootPart.Position).Magnitude
+                    if vu2.killAllTeleport then
+                        vu583()
+                        task.wait(0.3)
+                    elseif v599 < 15 then
+                        vu583()
+                    end
+                end
+            end
+        end)
+    end
+end
+local function vu602()
+    if vu2.killAllActive then
+        vu2.killAllActive = false
+        if vu6.killAllConnection and type(vu6.killAllConnection) == "userdata" then
+            pcall(function()
+                vu6.killAllConnection:Disconnect()
+            end)
+            vu6.killAllConnection = nil
+        end
+        vu5.currentTarget = nil
+        local vu601 = game.Players.LocalPlayer.Character
+        if vu601 and vu601:FindFirstChildOfClass("Humanoid") then
+            pcall(function()
+                vu601.Humanoid:MoveTo(vu601.HumanoidRootPart.Position)
+            end)
+        end
+    end
+end
+v35:Divider({
+    Title = vu24("KILL ALL", vu13.Primary, vu13.Text)
+})
+v35:Section({
+    Title = vu24("KILL ALL", vu13.Primary, vu13.Text)
+})
+v35:Toggle({
+    Title = vu24("Kill All", vu13.Primary, vu13.Text),
+    Desc = "Automatically hunt and kill all survivors",
+    Value = false,
+    Icon = "skull",
+    Callback = function(p603)
+        if p603 then
+            vu600()
+        else
+            vu602()
+        end
+    end
+})
+v35:Toggle({
+    Title = vu24("Teleport Mode", vu13.Primary, vu13.Text),
+    Desc = "Teleport to survivors",
+    Value = false,
+    Icon = "move",
+    Callback = function(p604)
+        vu2.killAllTeleport = p604
+        if p604 then
+            vu2.killAllFly = false
+        end
+    end
+})
+v35:Button({
+    Title = vu24("Force New Target", vu13.Primary, vu13.Accent),
+    Desc = "Switch to nearest survivor",
+    Icon = "refresh-cw",
+    Callback = function()
+        vu5.currentTarget = vu568()
+    end
+})
+v35:Divider({
+    Title = vu24("KILL ALL", vu13.Primary, vu13.Text)
+})
+v35:Section({
+    Title = vu24("AUTO SKILLS", vu13.Primary, vu13.Text)
+})
+v35:Toggle({
+    Title = vu24("Auto Raging Pace", vu13.Primary, vu13.Text),
+    Desc = "Auto use RagingPace for Slasher",
+    Value = false,
+    Icon = "zap",
+    Callback = function(p605)
+        vu2.autoRagingPace = p605
+        if p605 then
+            vu585()
+        else
+            stopAutoSkill("RagingPace")
+        end
+    end
+})
+v35:Toggle({
+    Title = vu24("Auto Unstable Eye", vu13.Primary, vu13.Text),
+    Desc = "Auto use UnstableEye for 1x1x1x1",
+    Value = false,
+    Icon = "eye",
+    Callback = function(p606)
+        vu2.autoUnstableEye = p606
+        if p606 then
+            vu587()
+        else
+            stopAutoSkill("UnstableEye")
+        end
+    end
+})
+v35:Toggle({
+    Title = vu24("Auto Pizza Delivery", vu13.Primary, vu13.Text),
+    Desc = "Auto use PizzaDelivery for c001kidd",
+    Value = false,
+    Icon = "package",
+    Callback = function(p607)
+        vu2.autoPizzaDelivery = p607
+        if p607 then
+            vu589()
+        else
+            stopAutoSkill("PizzaDelivery")
+        end
+    end
+})
+v35:Toggle({
+    Title = vu24("Auto 404 Error", vu13.Primary, vu13.Text),
+    Desc = "Auto use 404Error for JohnDoe",
+    Value = false,
+    Icon = "axe",
+    Callback = function(p608)
+        vu2.auto404Error = p608
+        if p608 then
+            vu591()
+        else
+            stopAutoSkill("Error404")
+        end
+    end
+})
+game.Players.LocalPlayer.CharacterAdded:Connect(function(_)
+    if vu2.killAllActive then
+        pcall(vu602)
+        vu2.killAllActive = false
+    end
+    if vu2.killerAuraActive then
+        pcall(stopAura)
+        vu2.killerAuraActive = false
+    end
+    if vu2.slashAuraActive then
+        pcall(stopAura)
+        vu2.slashAuraActive = false
+    end
+    pcall(vu596)
+    if vu2.autoRepairActive then
+        pcall(vu429)
+        vu2.autoRepairActive = false
+    end
+    if vu2.autoFriedChicken then
+        pcall(vu437)
+        vu2.autoFriedChicken = false
+    end
+    if vu2.autoCoinFlip then
+        pcall(vu443)
+        vu2.autoCoinFlip = false
+    end
+    if vu2.autoClone then
+        pcall(vu451)
+        vu2.autoClone = false
+    end
+    if vu2.autoBlockActive then
+        pcall(vu461)
+        vu2.autoBlockActive = false
+    end
+    if vu2.autoPickupActive then
+        pcall(stopAutoPickup)
+        vu2.autoPickupActive = false
+    end
+    if vu2.flying then
+        pcall(vu85)
+        vu2.flying = false
+    end
+    if vu2.noclip and _G.NoclipLoop then
+        pcall(function()
+            _G.NoclipLoop:Disconnect()
+        end)
+        _G.NoclipLoop = nil
+        vu2.noclip = false
+    end
+    if vu2.infiniteJump and _G.InfiniteJumpConnection then
+        pcall(function()
+            _G.InfiniteJumpConnection:Disconnect()
+        end)
+        _G.InfiniteJumpConnection = nil
+        vu2.infiniteJump = false
+    end
+    vu3 = {
+        lastAuraUse = 0,
+        lastPickupTime = 0,
+        lastFriedChickenTime = 0,
+        lastCloneTime = 0,
+        lastCoinFlipTime = 0,
+        lastEspUpdate = 0,
+        teleportTime = 0
+    }
+    vu5 = {
+        autoGenDebounce = {},
+        repairDebounce = {},
+        pickedUpItems = {},
+        skillCooldowns = {},
+        lastHealth = 0,
+        currentTarget = nil,
+        currentRepairGenerator = nil,
+        killerModel = nil,
+        isSurvivor = false
+    }
+    task.wait(1)
+    pcall(vu44)
+end)
+local function vu618()
+    local v609 = nil
+    local v610 = math.huge
+    local v611 = game.Players.LocalPlayer.Character
+    if not (v611 and v611:FindFirstChild("HumanoidRootPart")) then
+        return nil
+    end
+    local v612 = workspace.Players:FindFirstChild("Survivors")
+    if not v612 then
+        return nil
+    end
+    local v613, v614, v615 = pairs(v612:GetChildren())
+    while true do
+        local v616
+        v615, v616 = v613(v614, v615)
+        if v615 == nil then
+            break
+        end
+        if v616:IsA("Model") and v616:FindFirstChild("HumanoidRootPart") then
+            local v617 = (v611.HumanoidRootPart.Position - v616.HumanoidRootPart.Position).Magnitude
+            if v617 < v610 then
+                v609 = v616
+                v610 = v617
+            end
+        end
+    end
+    return v609, v610
+end
+local function vu621(p619)
+    local v620 = tick()
+    if v620 - vu3.lastAuraUse < vu4.auraCooldown then
+        return false
+    end
+    game.ReplicatedStorage.Modules.Network.RemoteEvent:FireServer("UseActorAbility", p619)
+    vu3.lastAuraUse = v620
+    return true
+end
+local function vu625()
+    if not vu6.auraConnection then
+        vu6.auraConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.killerAuraActive and vu5.isKiller then
+                local v622, v623 = vu618()
+                if v622 and vu4.auraRange >= v623 then
+                    local v624 = game.Players.LocalPlayer.Character.Name
+                    vu621(v624 == "Noli" and "Stab" or (v624 == "c001kidd" and "Punch" or (v624 == "Guest1337" and "Punch" or "Slash")))
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu628()
+    if not vu6.auraConnection then
+        vu6.auraConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            if vu2.slashAuraActive and vu5.isKiller then
+                local v626, v627 = vu618()
+                if v626 and vu4.auraRange >= v627 then
+                    vu621("Slash")
+                end
+            else
+                return
+            end
+        end)
+    end
+end
+local function vu629()
+    if vu6.auraConnection and type(vu6.auraConnection) == "userdata" then
+        pcall(function()
+            vu6.auraConnection:Disconnect()
+        end)
+        vu6.auraConnection = nil
+    end
+end
+local function vu632(p630, p631)
+    vu629()
+    if p631 then
+        if not vu5.isKiller then
+            return false
+        end
+        if p630 == "killer" then
+            vu625()
+        elseif p630 == "slash" then
+            vu628()
+        end
+    end
+end
+v35:Divider({
+    Title = vu24("", vu13.Primary, vu13.Text)
+})
+v35:Section({
+    Title = vu24("KILLER AURA", vu13.Primary, vu13.Text)
+})
+v35:Toggle({
+    Title = vu24("Killer Aura", vu13.Primary, vu13.Text),
+    Desc = "Auto attack neariest survivor",
+    Value = false,
+    Icon = "target",
+    Callback = function(p633)
+        vu2.killerAuraActive = p633
+        if p633 then
+            vu2.slashAuraActive = false
+        end
+        vu632("killer", p633)
+    end
+})
+v35:Toggle({
+    Title = vu24("Slash Aura", vu13.Primary, vu13.Text),
+    Desc = "Slash aura for killers",
+    Value = false,
+    Icon = "sword",
+    Callback = function(p634)
+        vu2.slashAuraActive = p634
+        if p634 then
+            vu2.killerAuraActive = false
+        end
+        vu632("slash", p634)
+    end
+})
+v35:Slider({
+    Title = vu24("Aura Range", vu13.Primary, vu13.Text),
+    Desc = "Distance for auto attack",
+    Value = {
+        Min = 5,
+        Max = 30,
+        Default = vu4.auraRange
+    },
+    Callback = function(p635)
+        vu4.auraRange = p635
+    end
+})
+v35:Slider({
+    Title = vu24("Attack Cooldown", vu13.Primary, vu13.Text),
+    Desc = "Attack Delay (seconds)",
+    Value = {
+        Min = 0.5,
+        Max = 3,
+        Default = vu4.auraCooldown
+    },
+    Callback = function(p636)
+        vu4.auraCooldown = p636
+    end
+})
+game.Players.LocalPlayer.CharacterAdded:Connect(function(_)
+    if vu2.killerAuraActive then
+        vu629()
+        vu2.killerAuraActive = false
+    end
+    if vu2.slashAuraActive then
+        vu629()
+        vu2.slashAuraActive = false
+    end
+    task.wait(1)
+    vu44()
+end)
+game:GetService("RunService").Heartbeat:Connect(function()
+    if (vu2.killerAuraActive or vu2.slashAuraActive) and not vu5.isKiller then
+        vu629()
+        vu2.killerAuraActive = false
+        vu2.slashAuraActive = false
+    end
+end)
+local vu637 = v25.ConfigManager:CreateConfig("Ldux_Config")
+v36:Divider({
+    Title = vu24("ESP SETTINGS", vu13.Primary, vu13.Text)
+})
+v36:Section({
+    Title = vu24("ESP VISUAL SETTINGS", vu13.Primary, vu13.Text)
+})
+local vu639 = v36:Slider({
+    Title = vu24("ESP Text Size", vu13.Primary, vu13.Text),
+    Desc = "Adjust the size of ESP text labels",
+    Step = 1,
+    Value = {
+        Min = 8,
+        Max = 24,
+        Default = 14
+    },
+    Callback = function(p638)
+        vu4.espTextSize = p638
+        vu207()
+    end
+})
+local vu641 = v36:Slider({
+    Title = vu24("Highlight Transparency", vu13.Primary, vu13.Text),
+    Desc = "Adjust transparency of ESP highlights",
+    Step = 0.05,
+    Value = {
+        Min = 0,
+        Max = 1,
+        Default = 0.5
+    },
+    Callback = function(p640)
+        vu4.highlightTransparency = p640
+        vu207()
+    end
+})
+local vu643 = v36:Slider({
+    Title = vu24("Highlight Outline", vu13.Primary, vu13.Text),
+    Desc = "Adjust outline thickness of ESP highlights",
+    Step = 0.05,
+    Value = {
+        Min = 0,
+        Max = 1,
+        Default = 0
+    },
+    Callback = function(p642)
+        vu4.highlightOutlineTransparency = p642
+        vu207()
+    end
+})
+v36:Divider({
+    Title = vu24("CONFIGURATION SYSTEM", vu13.Primary, vu13.Text)
+})
+v36:Section({
+    Title = vu24("CONFIG MANAGEMENT", vu13.Primary, vu13.Text)
+})
+v36:Button({
+    Title = vu24("Save Configuration", vu13.Primary, vu13.Accent),
+    Desc = "Save current settings to config",
+    Icon = "save",
+    Callback = function()
+        vu637:Save()
+        vu1:Notify({
+            Title = "Configuration",
+            Content = "Settings saved successfully!",
+            Duration = 3
+        })
+    end
+})
+v36:Button({
+    Title = vu24("Load Configuration", vu13.Primary, vu13.Accent),
+    Desc = "Load settings from config",
+    Icon = "download",
+    Callback = function()
+        vu637:Load()
+        vu1:Notify({
+            Title = "Configuration",
+            Content = "Settings loaded successfully!",
+            Duration = 3
+        })
+    end
+})
+v36:Button({
+    Title = vu24("Reset Configuration", vu13.Primary, vu13.Accent),
+    Desc = "Reset to default settings",
+    Icon = "refresh-cw",
+    Callback = function()
+        vu4.espTextSize = 14
+        vu4.highlightTransparency = 0.5
+        vu4.highlightOutlineTransparency = 0
+        vu639:Set(14)
+        vu641:Set(0.5)
+        vu643:Set(0)
+        vu207()
+        vu1:Notify({
+            Title = "Configuration",
+            Content = "Settings reset to default!",
+            Duration = 3
+        })
+    end
+})
+v37:Divider({
+    Title = vu24("SERVER FUNCTIONS", vu13.Primary, vu13.Text)
+})
+v37:Section({
+    Title = vu24("SERVER MANAGEMENT", vu13.Primary, vu13.Text)
+})
+v37:Button({
+    Title = vu24("Rejoin to Server", vu13.Primary, vu13.Accent),
+    Desc = "Reconnect to the current game server",
+    Icon = "refresh-cw",
+    Callback = function()
+        local v644, v645 = pcall(function()
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
+        end)
+        if not v644 then
+            vu1:Notify({
+                Title = "Error",
+                Content = "Failed to rejoin server: " .. tostring(v645),
+                Duration = 5,
+                Type = "error"
+            })
+        end
+    end
+})
+v37:Button({
+    Title = vu24("Server Hop", vu13.Primary, vu13.Accent),
+    Desc = "Join a random server for this game",
+    Icon = "shuffle",
+    Callback = function()
+        vu1:Notify({
+            Title = "Server Hop",
+            Content = "Searching for random server...",
+            Duration = 3
+        })
+        local v653 = (function()
+            local v646, v647 = pcall(function()
+                return game:GetService("HttpService"):JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+            end)
+            if v646 and (v647 and v647.data) then
+                local v648, v649, v650 = ipairs(v647.data)
+                local v651 = {}
+                while true do
+                    local v652
+                    v650, v652 = v648(v649, v650)
+                    if v650 == nil then
+                        break
+                    end
+                    if v652.playing < v652.maxPlayers and v652.id ~= game.JobId then
+                        table.insert(v651, v652)
+                    end
+                end
+                if # v651 > 0 then
+                    return v651[math.random(1, # v651)].id
+                end
+            end
+            return nil
+        end)()
+        if v653 then
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v653, game.Players.LocalPlayer)
+        else
+            vu1:Notify({
+                Title = "Error",
+                Content = "No available servers found",
+                Duration = 5,
+                Type = "error"
+            })
+        end
+    end
+})
+v37:Button({
+    Title = vu24("Teleport to Smaller Server", vu13.Primary, vu13.Accent),
+    Desc = "Join a server with fewer players",
+    Icon = "users",
+    Callback = function()
+        vu1:Notify({
+            Title = "Server Search",
+            Content = "Looking for server with fewer players...",
+            Duration = 3
+        })
+        local v667 = (function()
+            local v654, v655 = pcall(function()
+                return game:GetService("HttpService"):JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+            end)
+            if v654 and (v655 and v655.data) then
+                table.sort(v655.data, function(p656, p657)
+                    return p656.playing < p657.playing
+                end)
+                local v658 = # game.Players:GetPlayers()
+                local v659, v660, v661 = ipairs(v655.data)
+                while true do
+                    local v662
+                    v661, v662 = v659(v660, v661)
+                    if v661 == nil then
+                        break
+                    end
+                    if v662.playing < v658 and (v662.id ~= game.JobId and v662.playing > 0) then
+                        return v662.id
+                    end
+                end
+                local v663, v664, v665 = ipairs(v655.data)
+                while true do
+                    local v666
+                    v665, v666 = v663(v664, v665)
+                    if v665 == nil then
+                        break
+                    end
+                    if v666.id ~= game.JobId and v666.playing > 0 then
+                        return v666.id
+                    end
+                end
+            end
+            return nil
+        end)()
+        if v667 then
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v667, game.Players.LocalPlayer)
+        else
+            vu1:Notify({
+                Title = "Error",
+                Content = "No suitable servers found",
+                Duration = 5,
+                Type = "error"
+            })
+        end
+    end
+})
+v37:Divider({
+    Title = vu24("SERVER INFO", vu13.Primary, vu13.Text)
+})
+v37:Section({
+    Title = vu24("CURRENT SERVER", vu13.Primary, vu13.Text)
+})
+local vu668 = v37:Paragraph({
+    Title = vu24("Server ID: " .. game.JobId, vu13.Primary, vu13.Text),
+    Desc = "Current server information",
+    Image = "server",
+    ImageSize = 20,
+    Color = "White"
+})
+local vu669 = v37:Paragraph({
+    Title = vu24("Players: " .. # game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers, vu13.Primary, vu13.Text),
+    Desc = "Current player count",
+    Image = "users",
+    ImageSize = 20,
+    Color = "White"
+})
+local function vu670()
+    vu668:SetTitle(vu24("Server ID: " .. game.JobId, vu13.Primary, vu13.Text))
+    vu669:SetTitle(vu24("Players: " .. # game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers, vu13.Primary, vu13.Text))
+end
+spawn(function()
+    while wait(10) do
+        vu670()
+    end
+end)
+v37:Button({
+    Title = vu24("Refresh Server Info", vu13.Primary, vu13.Accent),
+    Desc = "Update current server information",
+    Icon = "refresh-cw",
+    Callback = vu670
+})
+local _ = false
+local _ = nil
+game:GetService("TeleportService").TeleportInitFailed:Connect(function(_, _, p671)
+    vu1:Notify({
+        Title = "Teleport Failed",
+        Content = "Reason: " .. tostring(p671),
+        Duration = 5,
+        Type = "error"
+    })
+end)
+game:GetService("TeleportService").LocalPlayerTeleportFailed:Connect(function(_, p672)
+    vu1:Notify({
+        Title = "Teleport Failed",
+        Content = "Reason: " .. tostring(p672),
+        Duration = 5,
+        Type = "error"
+    })
+end)
+local v673 = vu637
+vu637.Register(v673, "EspTextSize", vu639)
+local v674 = vu637
+vu637.Register(v674, "HighlightTransparency", vu641)
+local v675 = vu637
+vu637.Register(v675, "HighlightOutline", vu643)
+local v676, v677, v678 = pairs(v38)
+local v679 = vu637
+while true do
+    local v680
+    v678, v680 = v676(v677, v678)
+    if v678 == nil then
+        break
+    end
+    v679:Register(v678, v680)
+end
+v679:Register("NoclipToggle", v31:FindFirstChild("NoclipToggle"))
+v679:Register("InfiniteJumpToggle", v31:FindFirstChild("InfiniteJumpToggle"))
+v679:Register("FlyToggle", v31:FindFirstChild("FlyToggle"))
+v679:Register("InfiniteStaminaToggle", v31:FindFirstChild("InfiniteStaminaToggle"))
+v679:Register("AntiStunToggle", v31:FindFirstChild("AntiStunToggle"))
+v679:Register("AntiSlowToggle", v31:FindFirstChild("AntiSlowToggle"))
+v679:Register("AutoRepairToggle", v34:FindFirstChild("AutoRepairToggle"))
+v679:Register("AutoFriedChickenToggle", v34:FindFirstChild("AutoFriedChickenToggle"))
+v679:Register("AutoCoinFlipToggle", v34:FindFirstChild("AutoCoinFlipToggle"))
+v679:Register("AutoCloneToggle", v34:FindFirstChild("AutoCloneToggle"))
+v679:Register("AutoBlockToggle", v34:FindFirstChild("AutoBlockToggle"))
+v679:Register("KillAllToggle", v35:FindFirstChild("KillAllToggle"))
+v679:Register("TeleportModeToggle", v35:FindFirstChild("TeleportModeToggle"))
+v679:Register("KillerAuraToggle", v35:FindFirstChild("KillerAuraToggle"))
+v679:Register("SlashAuraToggle", v35:FindFirstChild("SlashAuraToggle"))
+local v681, v682, v683 = pairs(vu11)
+while true do
+    local v684
+    v683, v684 = v681(v682, v683)
+    if v683 == nil then
+        break
+    end
+    local v685 = v683 .. "AimbotToggle"
+    v679:Register(v685, v33:FindFirstChild(v685))
+end
+task.wait(1)
+v679:Load()
